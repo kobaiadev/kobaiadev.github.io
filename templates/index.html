@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dados da Planilha</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dados da Planilha</h1>
+    <table>
+        <thead>
+            <tr>                
+                <th>id_pedido</th>
+                <th>codigo_do_pedido_sm</th>
+                <th>produto</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+                <tr>                    
+                    <td>{{ row['id_pedido'] }}</td>
+                    <td>{{ row['codigo_do_pedido_sm'] }}</td>
+                    <td>{{ row['produto'] }}</td>                    
+                </tr>
+            {% endfor %}
+        </tbody>
+        
+    </table>
+</body>
+</html>
