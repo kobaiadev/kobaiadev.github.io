@@ -264,8 +264,10 @@
   const container = document.getElementById("lojas-container");
 
   function formatarValor(valor) {
-    return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  // Força formatação BR padrão: pontos em milhares e vírgula decimal, sem espaçamento
+  return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: true });
   }
+
 
   function criarDetalhes(loja) {
     let html = `<div class="detalhes">`;
