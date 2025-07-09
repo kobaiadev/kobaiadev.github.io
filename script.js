@@ -1,8 +1,7 @@
-const API_KEY = "5b8fffed1d434579b4381bc711c4a40f";  // Pegue a chave gratuita em https://newsapi.org
-const QUERY = "furto supermercado OR perdas prevenção OR roubo supermercado";
-const proxy = "https://corsproxy.io/?";
-const urlReal = `https://newsapi.org/v2/everything?q=${encodeURIComponent(QUERY)}&language=pt&sortBy=publishedAt&pageSize=10&apiKey=${API_KEY}`;
-const URL = proxy + encodeURIComponent(urlReal);
+const API_KEY = "5b8fffed1d434579b4381bc711c4a40f"; // coloque sua chave da NewsAPI aqui
+const QUERY = "furto supermercado OR perdas OR roubo supermercado";
+const urlOriginal = `https://newsapi.org/v2/everything?q=${encodeURIComponent(QUERY)}&language=pt&sortBy=publishedAt&pageSize=10&apiKey=${API_KEY}`;
+const URL = `https://corsproxy.io/?${encodeURIComponent(urlOriginal)}`;
 
 async function carregarNoticias() {
   const container = document.getElementById("noticias");
@@ -12,14 +11,13 @@ async function carregarNoticias() {
     const resposta = await fetch(URL);
     const dados = await resposta.json();
 
-    if (dados.articles.length === 0) {
+    if (!dados.articles || dados.articles.length === 0) {
       container.innerHTML = "<p>Nenhuma notícia encontrada.</p>";
       return;
     }
 
     container.innerHTML = "";
-
-    dados.articles.forEach(artigo => {
+    dados.articles.forEach((artigo) => {
       const div = document.createElement("div");
       div.className = "noticia";
       div.innerHTML = `
@@ -31,7 +29,7 @@ async function carregarNoticias() {
     });
   } catch (erro) {
     container.innerHTML = "<p>Erro ao carregar notícias.</p>";
-    console.error("Erro na API:", erro);
+    console.error("Erro ao buscar notícias:", erro);
   }
 }
 
