@@ -1,6 +1,8 @@
 const API_KEY = "5b8fffed1d434579b4381bc711c4a40f";  // Pegue a chave gratuita em https://newsapi.org
 const QUERY = "furto supermercado OR perdas prevenção OR roubo supermercado";
-const URL = `https://newsapi.org/v2/everything?q=${encodeURIComponent(QUERY)}&language=pt&sortBy=publishedAt&pageSize=10&apiKey=${API_KEY}`;
+const proxy = "https://corsproxy.io/?";
+const urlReal = `https://newsapi.org/v2/everything?q=${encodeURIComponent(QUERY)}&language=pt&sortBy=publishedAt&pageSize=10&apiKey=${API_KEY}`;
+const URL = proxy + encodeURIComponent(urlReal);
 
 async function carregarNoticias() {
   const container = document.getElementById("noticias");
