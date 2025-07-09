@@ -1,5 +1,5 @@
 const API_KEY = "5b7b286d2bdcfe133230f8b2f2ee5315"; // coloque sua chave GNews aqui
-const QUERY = "furto supermercado perdas prevenção";
+const QUERY = "supermercado segurança OR furto OR roubo OR perda";
 const URL = `https://gnews.io/api/v4/search?q=${encodeURIComponent(QUERY)}&lang=pt&token=${API_KEY}&max=10`;
 
 async function carregarNoticias() {
