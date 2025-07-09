@@ -1,35 +1,34 @@
-const API_KEY = "5b8fffed1d434579b4381bc711c4a40f"; // coloque sua chave da NewsAPI aqui
-const QUERY = "furto supermercado OR perdas OR roubo supermercado";
-const urlOriginal = `https://newsapi.org/v2/everything?q=${encodeURIComponent(QUERY)}&language=pt&sortBy=publishedAt&pageSize=10&apiKey=${API_KEY}`;
-const URL = `https://corsproxy.io/?${encodeURIComponent(urlOriginal)}`;
+const API_KEY = "5b7b286d2bdcfe133230f8b2f2ee5315"; // coloque sua chave GNews aqui
+const QUERY = "furto supermercado perdas prevenção";
+const URL = `https://gnews.io/api/v4/search?q=${encodeURIComponent(QUERY)}&lang=pt&token=${API_KEY}&max=10`;
 
 async function carregarNoticias() {
   const container = document.getElementById("noticias");
   container.innerHTML = "<p>Carregando...</p>";
 
   try {
-    const resposta = await fetch(URL);
-    const dados = await resposta.json();
+    const response = await fetch(URL);
+    const data = await response.json();
 
-    if (!dados.articles || dados.articles.length === 0) {
+    if (!data.articles || data.articles.length === 0) {
       container.innerHTML = "<p>Nenhuma notícia encontrada.</p>";
       return;
     }
 
     container.innerHTML = "";
-    dados.articles.forEach((artigo) => {
+    data.articles.forEach(article => {
       const div = document.createElement("div");
       div.className = "noticia";
       div.innerHTML = `
-        <h3><a href="${artigo.url}" target="_blank">${artigo.title}</a></h3>
-        <p>${artigo.description || ""}</p>
-        <small><strong>${artigo.source.name}</strong> - ${new Date(artigo.publishedAt).toLocaleDateString()}</small>
+        <h3><a href="${article.url}" target="_blank">${article.title}</a></h3>
+        <p>${article.description || ""}</p>
+        <small><strong>${article.source.name}</strong> - ${new Date(article.publishedAt).toLocaleDateString()}</small>
       `;
       container.appendChild(div);
     });
-  } catch (erro) {
+  } catch (error) {
     container.innerHTML = "<p>Erro ao carregar notícias.</p>";
-    console.error("Erro ao buscar notícias:", erro);
+    console.error("Erro ao buscar notícias:", error);
   }
 }
 
