@@ -1,44 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dados da Planilha</title>
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Monitor de Notícias - Perdas no Varejo</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <h1>Dados da Planilha</h1>
-    <table>
-        <thead>
-            <tr>                
-                <th>id_pedido</th>
-                <th>codigo_do_pedido_sm</th>
-                <th>produto</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in data %}
-                <tr>                    
-                    <td>{{ row['id_pedido'] }}</td>
-                    <td>{{ row['codigo_do_pedido_sm'] }}</td>
-                    <td>{{ row['produto'] }}</td>                    
-                </tr>
-            {% endfor %}
-        </tbody>
-        
-    </table>
+  <h1>📰 Notícias sobre Furtos e Prevenção de Perdas</h1>
+  <div id="noticias">Carregando notícias...</div>
+
+  <script src="script.js"></script>
 </body>
 </html>
+
