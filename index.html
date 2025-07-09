@@ -1,405 +1,474 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Monitor de Notícias - Perdas no Varejo</title>
-  <style>
-    /* Reset */
-    * {
-      margin: 0; padding: 0; box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #222;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Monitor de Notícias e Relatórios - Perdas no Varejo</title>
 
+<!-- Fonte Inter -->
+<link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+
+<style>
+  /* Reset e fonte */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #f8fafc;
+    color: #1e293b;
+    margin: 0; padding: 0 1rem;
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+  }
+
+  h1 {
+    color: #1e40af;
+    margin: 1rem 0 2rem 0;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  /* Container geral */
+  .container {
+    max-width: 900px;
+    width: 100%;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgb(30 64 175 / 0.15);
+    padding: 1.5rem 2rem;
+    margin-bottom: 3rem;
+  }
+
+  /* Abas */
+  .tabs {
+    display: flex;
+    border-bottom: 3px solid #cbd5e1;
+    margin-bottom: 1rem;
+  }
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    background: #e0e7ff;
+    color: #1e40af;
+    font-weight: 600;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    user-select: none;
+    position: relative;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  .tab:not(.active):hover,
+  .tab:not(.active):focus {
+    background-color: #c7d2fe;
+    outline: none;
+  }
+  .tab.active {
+    background: #1e40af;
+    color: white;
+    box-shadow: 0 -3px 0 #1e40af inset;
+  }
+
+  /* Conteúdo das abas */
+  .tab-content {
+    display: none;
+    animation: fadeIn 0.4s ease forwards;
+  }
+  .tab-content.active {
+    display: block;
+  }
+  @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }
+
+  /* Busca Análise Individualizada */
+  #analise input[type="text"] {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 2px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    transition: border-color 0.3s;
+  }
+  #analise input[type="text"]:focus {
+    border-color: #1e40af;
+    outline: none;
+    box-shadow: 0 0 8px rgb(30 64 175 / 0.4);
+  }
+
+  /* Tabelas estilos */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+  }
+  thead tr {
+    background-color: #1e40af;
+    color: white;
+  }
+  th, td {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #cbd5e1;
+    text-align: left;
+  }
+  tbody tr:nth-child(even) {
+    background-color: #f1f5ff;
+  }
+
+  /* Mensagem nenhuma notícia / erro */
+  .message {
+    color: #64748b;
+    font-style: italic;
+    padding: 1rem 0;
+  }
+
+  /* Responsividade */
+  @media (max-width: 600px) {
     body {
-      background: #f9f9fb;
-      padding: 20px;
-      max-width: 960px;
-      margin: auto;
+      padding: 0 0.5rem;
     }
-
-    h1 {
-      margin-bottom: 20px;
-      color: #0d47a1;
-      text-align: center;
+    .container {
+      padding: 1rem 1rem;
     }
-
-    /* Tabs container */
-    .tabs {
-      display: flex;
-      border-bottom: 2px solid #0d47a1;
-      margin-bottom: 20px;
-      user-select: none;
+    th, td {
+      font-size: 0.9rem;
+      padding: 0.4rem 0.5rem;
     }
-
-    .tab {
-      flex: 1;
-      padding: 12px 16px;
-      text-align: center;
-      cursor: pointer;
-      background: #e3f2fd;
-      color: #0d47a1;
-      font-weight: 600;
-      transition: background-color 0.3s, color 0.3s;
-      border-top-left-radius: 8px;
-      border-top-right-radius: 8px;
-      border: 1px solid #0d47a1;
-      border-bottom: none;
-    }
-
-    .tab:not(:last-child) {
-      border-right: none;
-    }
-
-    .tab.active {
-      background: white;
-      color: #0d47a1;
-      font-weight: 700;
-      box-shadow: 0 3px 5px rgb(13 71 161 / 0.2);
-      cursor: default;
-    }
-
-    /* Content panels */
-    .tab-content {
-      background: white;
-      border: 1px solid #0d47a1;
-      border-radius: 0 0 8px 8px;
-      padding: 20px;
-      box-shadow: 0 3px 8px rgb(0 0 0 / 0.1);
-      max-height: 75vh;
-      overflow-y: auto;
-    }
-
-    /* Scrollbar styling for modern browsers */
-    .tab-content::-webkit-scrollbar {
-      width: 8px;
-    }
-    .tab-content::-webkit-scrollbar-thumb {
-      background-color: #0d47a1;
-      border-radius: 4px;
-    }
-
-    /* Typography */
-    h2 {
-      color: #0d47a1;
-      margin-bottom: 12px;
-      font-weight: 700;
-      border-bottom: 2px solid #0d47a1;
-      padding-bottom: 6px;
-    }
-
-    p, ul, ol, table {
-      margin-bottom: 16px;
-      line-height: 1.5;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 30px;
+    #analise input[type="text"] {
       font-size: 0.9rem;
     }
-
-    th, td {
-      padding: 8px 10px;
-      border: 1px solid #ccc;
-      text-align: left;
-    }
-
-    th {
-      background-color: #e3f2fd;
-      font-weight: 600;
-      color: #0d47a1;
-    }
-
-    tr:nth-child(even) {
-      background-color: #f5f9ff;
-    }
-
-    /* Highlights */
-    .highlight-up {
-      color: #d32f2f;
-      font-weight: 700;
-    }
-    .highlight-good {
-      color: #388e3c;
-      font-weight: 700;
-    }
-    .note {
-      background: #f0f7ff;
-      border-left: 4px solid #0d47a1;
-      padding: 10px 16px;
-      margin-bottom: 20px;
-      border-radius: 4px;
-      font-style: italic;
-      color: #0d47a1;
-    }
-
-    /* Responsive */
-    @media (max-width: 600px) {
-      .tabs {
-        flex-direction: column;
-      }
-      .tab {
-        border-radius: 0;
-        border-bottom: 1px solid #0d47a1;
-      }
-      .tab:last-child {
-        border-bottom: none;
-      }
-    }
-
-  </style>
+  }
+</style>
 </head>
 <body>
-  <h1>📰 Monitor de Notícias e Relatórios – Perdas no Varejo</h1>
 
-  <div class="tabs" role="tablist">
-    <div class="tab active" role="tab" tabindex="0" aria-selected="true" aria-controls="analise" id="tab-analise">📊 Análise Individualizada</div>
-    <div class="tab" role="tab" tabindex="-1" aria-selected="false" aria-controls="relatorio" id="tab-relatorio">📈 Relatório Geral</div>
-  </div>
+<h1>📰 Monitor de Notícias e Relatórios - Perdas no Varejo</h1>
 
-  <section id="analise" class="tab-content" role="tabpanel" aria-labelledby="tab-analise">
-    <h2>Análise Individualizada das Perdas – 2025 (Janeiro a Maio)</h2>
+<div class="container" role="main">
 
-    <h3>🏬 Loja 09</h3>
-    <p>Janeiro: 467,50 Brt<br>Fevereiro: 423,99 Brt<br>Março: 444,17 Brt<br>Abril: <span class="highlight-up">558,86 Brt 🔺</span><br>Maio: 414,55 Brt</p>
-    <p><strong>Total:</strong> 2.309,07 Brt<br><strong>Média Mensal:</strong> 461,81 Brt<br>🔎 Abril teve o maior valor registrado de perdas.</p>
+  <nav class="tabs" role="tablist" aria-label="Seções de relatório">
+    <button class="tab active" role="tab" aria-selected="true" aria-controls="analise" id="tab-analise" tabindex="0">
+      Análise Individualizada
+    </button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="relatorio" id="tab-relatorio" tabindex="-1">
+      Relatório Geral
+    </button>
+  </nav>
 
-    <h3>🏬 Loja 10</h3>
-    <p>Janeiro: 18,73 Brt<br>Fevereiro: 47,21 Brt<br>Março: <span class="highlight-up">48,43 Brt 🔺</span><br>Abril: 28,70 Brt<br>Maio: 22,25 Brt</p>
-    <p><strong>Total:</strong> 165,32 Brt<br><strong>Média Mensal:</strong> 33,06 Brt<br><span class="highlight-good">✅ Loja com menor volume total de perdas.</span></p>
+  <!-- Análise Individualizada -->
+  <section id="analise" class="tab-content active" role="tabpanel" aria-labelledby="tab-analise" aria-live="polite">
+    <label for="searchInput" class="visually-hidden">Buscar Loja ou Mês</label>
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Buscar por Loja, Mês ou Palavra-chave..."
+      aria-describedby="searchHelp"
+      autocomplete="off"
+    />
+    <small id="searchHelp" style="color:#64748b; display:block; margin-bottom:1rem;">
+      Digite para filtrar os dados da análise individualizada
+    </small>
 
-    <h3>🏬 Loja 11</h3>
-    <p>Janeiro: 530,52 Brt<br>Fevereiro: 352,60 Brt<br>Março: <span class="highlight-up">721,69 Brt 🔺</span><br>Abril: 358,22 Brt<br>Maio: 621,39 Brt</p>
-    <p><strong>Total:</strong> 2.584,42 Brt<br><strong>Média Mensal:</strong> 516,88 Brt<br><span class="highlight-up">⚠️ Destaque: Maior perda total e maior valor em um único mês (março).</span></p>
-
-    <h3>🏬 Loja 25</h3>
-    <p>Janeiro: 59,96 Brt<br>Fevereiro: 108,17 Brt<br>Março: 154,24 Brt<br>Abril: <span class="highlight-up">234,07 Brt 🔺</span><br>Maio: 228,13 Brt</p>
-    <p><strong>Total:</strong> 784,57 Brt<br><strong>Média Mensal:</strong> 156,91 Brt</p>
-
-    <h3>🏬 Loja 28</h3>
-    <p>Janeiro: 96,78 Brt<br>Fevereiro: 131,81 Brt<br>Março: <span class="highlight-up">324,99 Brt 🔺</span><br>Abril: 295,77 Brt<br>Maio: 42,98 Brt</p>
-    <p><strong>Total:</strong> 892,33 Brt<br><strong>Média Mensal:</strong> 178,47 Brt</p>
-
-    <h3>🏬 Loja 36</h3>
-    <p>Janeiro: 175,85 Brt<br>Fevereiro: 116,23 Brt<br>Março: <span class="highlight-up">246,21 Brt 🔺</span><br>Abril: 195,54 Brt<br>Maio: 189,96 Brt</p>
-    <p><strong>Total:</strong> 923,79 Brt<br><strong>Média Mensal:</strong> 184,76 Brt</p>
-
-    <h3>🏬 Loja 48</h3>
-    <p>Janeiro: 340,18 Brt<br>Fevereiro: 326,20 Brt<br>Março: <span class="highlight-up">754,34 Brt 🔺</span><br>Abril: 210,11 Brt<br>Maio: 195,32 Brt</p>
-    <p><strong>Total:</strong> 1.826,15 Brt<br><strong>Média Mensal:</strong> 365,23 Brt<br><span class="highlight-up">⚠️ Março: maior valor de perdas entre todas as lojas.</span></p>
-
-    <h3>🏬 Loja 53</h3>
-    <p>Janeiro: <span class="highlight-up">281,04 Brt 🔺</span><br>Fevereiro: 63,68 Brt<br>Março: 138,35 Brt<br>Abril: 110,77 Brt<br>Maio: 139,38 Brt</p>
-    <p><strong>Total:</strong> 733,22 Brt<br><strong>Média Mensal:</strong> 146,64 Brt</p>
-
-    <h2>🥇 Ranking de Perdas por Loja (Jan-Mai/2025)</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Posição</th>
-          <th>Loja</th>
-          <th>Total de Perdas (Brt)</th>
-          <th>Destaque</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>1º</td><td>Loja 11</td><td>2.584,42</td><td>🚨 Maior total geral e março crítico</td></tr>
-        <tr><td>2º</td><td>Loja 09</td><td>2.309,07</td><td>Perdas consistentes e altas</td></tr>
-        <tr><td>3º</td><td>Loja 48</td><td>1.826,15</td><td>Pico crítico em março</td></tr>
-        <tr><td>4º</td><td>Loja 36</td><td>923,79</td><td>Volume médio, porém relevante</td></tr>
-        <tr><td>5º</td><td>Loja 28</td><td>892,33</td><td>Março com perdas elevadas</td></tr>
-        <tr><td>6º</td><td>Loja 25</td><td>784,57</td><td>Oscilação mensal visível</td></tr>
-        <tr><td>7º</td><td>Loja 53</td><td>733,22</td><td>Controle estável com exceção de janeiro</td></tr>
-        <tr><td>8º</td><td>Loja 10</td><td>165,32</td><td>✅ Melhor desempenho no controle de perdas</td></tr>
-      </tbody>
-    </table>
-
-    <h2>📈 Análise Geral (Jan-Mai/2025)</h2>
-    <p><strong>Total Geral de Perdas (todas as lojas):</strong> 10.218,87 Brt</p>
-    <p><strong>Média Geral Mensal (por loja):</strong> 255,47 Brt</p>
-    <p><span class="highlight-good">✅ Destaques Positivos:</span><br>Loja 10: Eficiência na gestão de perdas — benchmark para as demais unidades.</p>
-    <p><span class="highlight-up">⚠️ Pontos Críticos:</span><br>Loja 11 e Loja 48: Demandam atenção imediata, principalmente pelos picos registrados em março.<br>Loja 09: Apresenta perdas elevadas de forma constante.</p>
+    <div id="analiseContent">
+      <!-- Conteúdo da Análise será gerado via JS -->
+    </div>
   </section>
 
-  <section id="relatorio" class="tab-content" role="tabpanel" aria-labelledby="tab-relatorio" hidden>
-    <h2>📊 RELATÓRIO GERAL – FURTOS POR PRODUTO E LOJA</h2>
-
-    <h3>🔝 Top 5 Produtos com Maior Perda Total em Múltiplas Lojas</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Produto</th>
-          <th>Perda Líquida Total</th>
-          <th>Lojas com Maior Incidência</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>BRINQ LIDER/DEDOCHES OVO TURMA MONICA</td><td>R$ 98,61</td><td>Loja 009 (R$ 53,70), Loja 025 (R$ 44,91)</td></tr>
-        <tr><td>SBP 45NOITES RF.50%DESC.SEG.UN.SUAV</td><td>R$ 38,74</td><td>Loja 009 e Loja 011 (R$ 19,37 cada)</td></tr>
-        <tr><td>DESOD.GIOVANNA B.AERO 2X150M.30%DES CLASSIC</td><td>R$ 32,70</td><td>Loja 009 e Loja 011 (R$ 16,35 cada)</td></tr>
-        <tr><td>CHOC ARCOR TORTUGUITA 134.5G.SORTID</td><td>R$ 20,42</td><td>Loja 028 (R$ 10,22), Loja 011 (R$ 10,20)</td></tr>
-        <tr><td>DESOD.GIOVANNA BABY ROLL-ON 2X50ML BLUE</td><td>R$ 17,95</td><td>Loja 036 (R$ 9,34), Loja 011 (R$ 8,61)</td></tr>
-      </tbody>
-    </table>
-
-    <h3>🏬 Lojas com Maior Frequência de Incidência</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Loja</th>
-          <th>Nº de Produtos com Incidência</th>
-          <th>Observações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>Loja 011 (V.VERDE)</td><td>19</td><td>Alta recorrência em itens de mercearia e higiene</td></tr>
-        <tr><td>Loja 009 (COLONIAL)</td><td>16</td><td>Alto impacto financeiro em diversos produtos</td></tr>
-        <tr><td>Loja 048 (LORENA)</td><td>11</td><td>Foco em bebidas lácteas e bomboniere</td></tr>
-        <tr><td>Loja 025 (TAUBATE1)</td><td>5</td><td>Menor quantidade, mas com altos valores unitários</td></tr>
-        <tr><td>Loja 036 (V.REDOND)</td><td>4</td><td>Produtos variados, valores mais baixos</td></tr>
-      </tbody>
-    </table>
-
-    <h3>📊 Categorias Mais Incidentes</h3>
-    <ul>
-      <li>Bomboniere / Chocolates (ex: M&Ms, Twix, Tortuguita, Serenata, Sonho de Valsa)</li>
-      <li>Higiene Pessoal (ex: Giovanna Baby, SBP, Desodorantes)</li>
-      <li>Bebidas Lácteas (ex: Yakult, Toddynho, Italakinho)</li>
-      <li>Infantil / Brinquedos (ex: Dedoches Turma da Mônica)</li>
-    </ul>
-
-    <h3>📌 Produtos Furtados em Mais de Uma Loja (Independente do Valor)</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Nº</th><th>Produto</th><th>Quantidade Total</th><th>Lojas Envolvidas</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>1</td><td>TODDYNHO 200ML CHOCOLATE</td><td>7 UN</td><td>011-V.VERDE (6), 048-LORENA (1)</td></tr>
-        <tr><td>2</td><td>SERENATA DE AMOR 17,6G</td><td>7 UN</td><td>011-V.VERDE (5), 025-TAUBATE1 (1), 009 (1)</td></tr>
-        <tr><td>3</td><td>BEB. LACT. QUATA KIDS 180ML CHOCOLATE</td><td>5 UN</td><td>048-LORENA (4), 011-V.VERDE (1)</td></tr>
-        <tr><td>4</td><td>BOMBOM SONHO VALSA 20G</td><td>5 UN</td><td>048 (2), 036 (1), 009 (1), 011 (1)</td></tr>
-        <tr><td>5</td><td>OVO KINDER 40G MENINOS</td><td>5 UN</td><td>011-V.VERDE (5)</td></tr>
-        <tr><td>6</td><td>M&Ms 30G MINIS TUBO</td><td>4 UN</td><td>009 (3), 048 (1)</td></tr>
-        <tr><td>7</td><td>PEDRA SANIT. SAMPA CLEAN 25G</td><td>4 UN</td><td>011-V.VERDE (4)</td></tr>
-        <tr><td>8</td><td>REFR. TUBAINA 200ML TUTTI FRUTI</td><td>4 UN</td><td>048-LORENA (4)</td></tr>
-        <tr><td>9</td><td>SALAMITOS SNACK 36G PEPPERONI</td><td>4 UN</td><td>009 (2), 011 (2)</td></tr>
-        <tr><td>10</td><td>SUCO PRATS 300ML GOIABA/MAÇÃ</td><td>4 UN</td><td>009 (2), 011 (2)</td></tr>
-        <tr><td>11</td><td>YAKULT/TAFF MAN SUPL.ALIM.110ML</td><td>4 UN</td><td>048 (3), 009 (1)</td></tr>
-      </tbody>
-    </table>
-
-    <h3>🏆 Top 10 Produtos Mais Furtados – Quantidade Total</h3>
-    <table>
-      <thead>
-        <tr><th>Rank</th><th>Produto</th><th>Qtde Furtada</th><th>Lojas Envolvidas</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>1</td><td>TODDYNHO 200ML CHOCOLATE</td><td>7 UN</td><td>011-V.VERDE, 048-LORENA</td></tr>
-        <tr><td>2</td><td>SERENATA DE AMOR 17,6G</td><td>7 UN</td><td>011-V.VERDE, 025, 009</td></tr>
-        <tr><td>3</td><td>BEB. LACT. QUATA KIDS 180ML</td><td>5 UN</td><td>048, 011</td></tr>
-        <tr><td>4</td><td>BOMBOM SONHO VALSA 20G</td><td>5 UN</td><td>048, 036, 009, 011</td></tr>
-        <tr><td>5</td><td>OVO KINDER 40G MENINOS</td><td>5 UN</td><td>011-V.VERDE</td></tr>
-        <tr><td>6</td><td>M&Ms 30G MINIS TUBO</td><td>4 UN</td><td>009, 048</td></tr>
-        <tr><td>7</td><td>PEDRA SANIT. SAMPA CLEAN 25G</td><td>4 UN</td><td>011-V.VERDE</td></tr>
-        <tr><td>8</td><td>REFR. TUBAINA 200ML</td><td>4 UN</td><td>048-LORENA</td></tr>
-        <tr><td>9</td><td>SALAMITOS SNACK 36G PEPPERONI</td><td>4 UN</td><td>009, 011</td></tr>
-        <tr><td>10</td><td>SUCO PRATS 300ML GOIABA/MAÇÃ</td><td>4 UN</td><td>009, 011</td></tr>
-      </tbody>
-    </table>
-
-    <h3>💰 Top 10 Produtos por Maior Perda Financeira Total</h3>
-    <table>
-      <thead>
-        <tr><th>Rank</th><th>Produto</th><th>Valor da Perda Total</th><th>Qtde</th><th>Lojas Principais</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>1</td><td>Dedoches Turma da Mônica</td><td>R$ 98,61</td><td>3</td><td>025 (2), 009 (1)</td></tr>
-        <tr><td>2</td><td>Ovo Kinder 40G Meninos</td><td>R$ 76,08</td><td>5</td><td>011-V.VERDE</td></tr>
-        <tr><td>3</td><td>Chocolate Milka 87G</td><td>R$ 47,72</td><td>2</td><td>009, 011</td></tr>
-        <tr><td>4</td><td>Brinquedo Agarradinhos Mickey</td><td>R$ 42,30</td><td>2</td><td>011-V.VERDE</td></tr>
-        <tr><td>5</td><td>Raid 45 Noites com 3 Refil</td><td>R$ 41,43</td><td>2</td><td>011-V.VERDE</td></tr>
-        <tr><td>6</td><td>Ruffles 115G Churrasco</td><td>R$ 28,24</td><td>3</td><td>036, 053</td></tr>
-        <tr><td>7</td><td>Kit Laevia Shampoo + Modelador</td><td>R$ 24,30</td><td>1</td><td>036-V.REDOND</td></tr>
-        <tr><td>8</td><td>Danone Yopro 250ml</td><td>R$ 24,24</td><td>4</td><td>048-LORENA</td></tr>
-        <tr><td>9</td><td>SBP 45 Noites Suave</td><td>R$ 19,37</td><td>1</td><td>009-COLONIAL</td></tr>
-        <tr><td>10</td><td>Ferrero Rocher 90G Dark</td><td>R$ 17,80</td><td>1</td><td>009-COLONIAL</td></tr>
-      </tbody>
-    </table>
-
-    <h3>🏪 Produto de Maior Valor Furtado por Loja</h3>
-    <table>
-      <thead>
-        <tr><th>Loja</th><th>Produto</th><th>Valor da Perda</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>025-TAUBATE1</td><td>Dedoches Turma da Mônica</td><td>R$ 44,91</td></tr>
-        <tr><td>028-TAUBATE2</td><td>Batata Pringles Pizza Calabresa</td><td>R$ 10,94</td></tr>
-        <tr><td>036-V.REDOND</td><td>Kit Laevia Shampoo + Modelador</td><td>R$ 24,30</td></tr>
-        <tr><td>048-LORENA</td><td>Danone Yopro 250ml</td><td>R$ 24,24</td></tr>
-        <tr><td>009-COLONIAL</td><td>Dedoches Turma da Mônica</td><td>R$ 84,98</td></tr>
-        <tr><td>010-MORUMBI</td><td>Ana Maria Chocolate 35G</td><td>R$ 17,66</td></tr>
-        <tr><td>011-V.VERDE</td><td>Ovo Kinder 40G Meninos</td><td>R$ 76,08</td></tr>
-        <tr><td>053-V.REDON2</td><td>Ruffles 115G Churrasco</td><td>R$ 18,86</td></tr>
-      </tbody>
-    </table>
-
-    <h3>⚠️ Análises e Recomendações Estratégicas</h3>
-    <ul>
-      <li>Produtos Repetidos em Lojas Estratégicas:
-        <ul><li>A repetição de perdas nos mesmos produtos entre Loja 009 e Loja 011 indica falhas semelhantes no controle ou exposição.</li></ul>
-      </li>
-      <li>Produtos Pequenos de Alto Giro e Furtabilidade:
-        <ul><li>Itens como M&Ms, Yakult, Fandangos, Bombons estão entre os mais perdidos.</li></ul>
-      </li>
-      <li>Produtos com Perda em 3 ou mais lojas:
-        <ul><li>Ex.: SADIA/SALAMITOS SNACK, CHOC TWIX, ELEGE/LEITE FERM.BOB.</li></ul>
-        <ul><li>Revisar plano de exposição padronizar ações preventivas.</li></ul>
-      </li>
-      <li>Monitoramento de Campanhas e Produtos com Descontos Visíveis (ex: 30% off, 50% off):
-        <ul><li>Produtos promocionais como SBP e Giovanna Baby Aero indicam ser visados.</li></ul>
-      </li>
-    </ul>
+  <!-- Relatório Geral -->
+  <section id="relatorio" class="tab-content" role="tabpanel" aria-labelledby="tab-relatorio" aria-live="polite">
+    <div id="relatorioContent">
+      <!-- Conteúdo do Relatório Geral será gerado via JS -->
+    </div>
   </section>
 
-  <script>
-    // Controle das abas para acessibilidade e troca visual
-    const tabs = document.querySelectorAll('.tab');
-    const panels = document.querySelectorAll('.tab-content');
+</div>
 
-    tabs.forEach((tab, i) => {
-      tab.addEventListener('click', () => {
-        // Remove ativo e esconde todos
-        tabs.forEach(t => {
-          t.classList.remove('active');
-          t.setAttribute('aria-selected', 'false');
-          t.setAttribute('tabindex', '-1');
-        });
-        panels.forEach(p => p.hidden = true);
+<script>
+  // Dados estruturados - Análise Individualizada (simplificado)
+  const analiseDados = [
+    {
+      loja: 'Loja 09',
+      meses: {
+        Janeiro: 467.50,
+        Fevereiro: 423.99,
+        Março: 444.17,
+        Abril: 558.86,
+        Maio: 414.55
+      },
+      total: 2309.07,
+      media: 461.81,
+      destaque: 'Abril teve o maior valor registrado de perdas.'
+    },
+    {
+      loja: 'Loja 10',
+      meses: {
+        Janeiro: 18.73,
+        Fevereiro: 47.21,
+        Março: 48.43,
+        Abril: 28.70,
+        Maio: 22.25
+      },
+      total: 165.32,
+      media: 33.06,
+      destaque: 'Loja com menor volume total de perdas.'
+    },
+    {
+      loja: 'Loja 11',
+      meses: {
+        Janeiro: 530.52,
+        Fevereiro: 352.60,
+        Março: 721.69,
+        Abril: 358.22,
+        Maio: 621.39
+      },
+      total: 2584.42,
+      media: 516.88,
+      destaque: 'Destaque: Maior perda total e maior valor em um único mês (março).'
+    },
+    {
+      loja: 'Loja 25',
+      meses: {
+        Janeiro: 59.96,
+        Fevereiro: 108.17,
+        Março: 154.24,
+        Abril: 234.07,
+        Maio: 228.13
+      },
+      total: 784.57,
+      media: 156.91,
+      destaque: ''
+    },
+    {
+      loja: 'Loja 28',
+      meses: {
+        Janeiro: 96.78,
+        Fevereiro: 131.81,
+        Março: 324.99,
+        Abril: 295.77,
+        Maio: 42.98
+      },
+      total: 892.33,
+      media: 178.47,
+      destaque: ''
+    },
+    {
+      loja: 'Loja 36',
+      meses: {
+        Janeiro: 175.85,
+        Fevereiro: 116.23,
+        Março: 246.21,
+        Abril: 195.54,
+        Maio: 189.96
+      },
+      total: 923.79,
+      media: 184.76,
+      destaque: ''
+    },
+    {
+      loja: 'Loja 48',
+      meses: {
+        Janeiro: 340.18,
+        Fevereiro: 326.20,
+        Março: 754.34,
+        Abril: 210.11,
+        Maio: 195.32
+      },
+      total: 1826.15,
+      media: 365.23,
+      destaque: 'Março: maior valor de perdas entre todas as lojas.'
+    },
+    {
+      loja: 'Loja 53',
+      meses: {
+        Janeiro: 281.04,
+        Fevereiro: 63.68,
+        Março: 138.35,
+        Abril: 110.77,
+        Maio: 139.38
+      },
+      total: 733.22,
+      media: 146.64,
+      destaque: ''
+    }
+  ];
 
-        // Ativa o clicado
-        tab.classList.add('active');
-        tab.setAttribute('aria-selected', 'true');
-        tab.setAttribute('tabindex', '0');
-        panels[i].hidden = false;
-        panels[i].focus();
-      });
+  // Dados simplificados Relatório Geral - pode expandir conforme necessidade
+  const relatorioDados = {
+    topProdutos: [
+      {
+        produto: 'BRINQ LIDER/DEDOCHES OVO TURMA MONICA',
+        perda: 'R$ 98,61',
+        lojas: 'Loja 009 (R$ 53,70), Loja 025 (R$ 44,91)'
+      },
+      {
+        produto: 'SBP 45NOITES RF.50%DESC.SEG.UN.SUAV',
+        perda: 'R$ 38,74',
+        lojas: 'Loja 009 e Loja 011 (R$ 19,37 cada)'
+      },
+      {
+        produto: 'DESOD.GIOVANNA B.AERO 2X150M.30%DES CLASSIC',
+        perda: 'R$ 32,70',
+        lojas: 'Loja 009 e Loja 011 (R$ 16,35 cada)'
+      },
+      {
+        produto: 'CHOC ARCOR TORTUGUITA 134.5G.SORTID',
+        perda: 'R$ 20,42',
+        lojas: 'Loja 028 (R$  10,22), Loja 011 (R$ 10,20)'
+      },
+      {
+        produto: 'DESOD.GIOVANNA BABY ROLL-ON 2X50ML BLUE',
+        perda: 'R$ 17,95',
+        lojas: 'Loja 036 (R$ 9,34), Loja 011 (R$ 8,61)'
+      }
+    ],
+    lojasFrequencia: [
+      { loja: 'Loja 011 (V.VERDE)', produtos: 19, obs: 'Alta recorrência em itens de mercearia e higiene' },
+      { loja: 'Loja 009 (COLONIAL)', produtos: 16, obs: 'Alto impacto financeiro em diversos produtos' },
+      { loja: 'Loja 048 (LORENA)', produtos: 11, obs: 'Foco em bebidas lácteas e bomboniere' },
+      { loja: 'Loja 025 (TAUBATE1)', produtos: 5, obs: 'Menor quantidade, mas com altos valores unitários' },
+      { loja: 'Loja 036 (V.REDOND)', produtos: 4, obs: 'Produtos variados, valores mais baixos' }
+    ],
+    categorias: [
+      'Bomboniere / Chocolates (ex: M&Ms, Twix, Tortuguita, Serenata, Sonho de Valsa)',
+      'Higiene Pessoal (ex: Giovanna Baby, SBP, Desodorantes)',
+      'Bebidas Lácteas (ex: Yakult, Toddynho, Italakinho)',
+      'Infantil / Brinquedos (ex: Dedoches Turma da Mônica)'
+    ]
+    // Pode adicionar as outras partes da informação aqui para exibir
+  };
 
-      tab.addEventListener('keydown', e => {
-        let index = [...tabs].indexOf(e.target);
-        if (e.key === 'ArrowRight') {
-          let nextIndex = (index + 1) % tabs.length;
-          tabs[nextIndex].focus();
-        } else if (e.key === 'ArrowLeft') {
-          let prevIndex = (index - 1 + tabs.length) % tabs.length;
-          tabs[prevIndex].focus();
-        }
-      });
+  // Função para formatar números para BRL (opcional)
+  function formatBrt(value) {
+    return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' Brt';
+  }
+
+  // Geração conteúdo Análise Individualizada
+  function gerarAnalise(dados, filtro = '') {
+    const container = document.getElementById('analiseContent');
+    const filtroLower = filtro.toLowerCase();
+
+    // Filtra pelos nomes das lojas e meses
+    const dadosFiltrados = dados.filter(item => {
+      if (!filtro) return true;
+      if (item.loja.toLowerCase().includes(filtroLower)) return true;
+      for (const mes in item.meses) {
+        if (mes.toLowerCase().includes(filtroLower)) return true;
+        // Também pesquisar pelo valor formatado?
+      }
+      return false;
     });
-  </script>
+
+    if (dadosFiltrados.length === 0) {
+      container.innerHTML = '<p class="message">Nenhum resultado encontrado para sua busca.</p>';
+      return;
+    }
+
+    let html = '';
+    dadosFiltrados.forEach(({loja, meses, total, media, destaque}) => {
+      html += `<article style="margin-bottom:1.5rem;">
+        <h2 style="color:#1e40af;">${loja}</h2>
+        <table aria-label="Perdas mensais da ${loja}">
+          <thead><tr><th>Mês</th><th>Valor</th></tr></thead>
+          <tbody>
+          ${Object.entries(meses).map(([mes, val]) =>
+            `<tr><td>${mes}</td><td>${formatBrt(val)}</td></tr>`).join('')}
+          </tbody>
+          <tfoot>
+            <tr><th>Total</th><th>${formatBrt(total)}</th></tr>
+            <tr><th>Média Mensal</th><th>${formatBrt(media)}</th></tr>
+          </tfoot>
+        </table>
+        ${destaque ? `<p><strong>🔎 ${destaque}</strong></p>` : ''}
+      </article>`;
+    });
+
+    container.innerHTML = html;
+  }
+
+  // Geração conteúdo Relatório Geral
+  function gerarRelatorio(dados) {
+    const container = document.getElementById('relatorioContent');
+
+    let html = `<section>
+      <h2 style="color:#1e40af;">🔝 Top 5 Produtos com Maior Perda Total em Múltiplas Lojas</h2>
+      <table aria-label="Top 5 Produtos com maior perda">
+        <thead><tr><th>Produto</th><th>Perda Líquida Total</th><th>Lojas com Maior Incidência</th></tr></thead>
+        <tbody>
+          ${dados.topProdutos.map(p => `<tr>
+            <td>${p.produto}</td>
+            <td>${p.perda}</td>
+            <td>${p.lojas}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </section>`;
+
+    html += `<section>
+      <h2 style="color:#1e40af;">🏬 Lojas com Maior Frequência de Incidência</h2>
+      <table aria-label="Lojas com maior frequência de incidência">
+        <thead><tr><th>Loja</th><th>Nº de Produtos com Incidência</th><th>Observações</th></tr></thead>
+        <tbody>
+          ${dados.lojasFrequencia.map(l => `<tr>
+            <td>${l.loja}</td>
+            <td>${l.produtos}</td>
+            <td>${l.obs}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </section>`;
+
+    html += `<section>
+      <h2 style="color:#1e40af;">📊 Categorias Mais Incidentes</h2>
+      <ul>
+        ${dados.categorias.map(c => `<li>${c}</li>`).join('')}
+      </ul>
+    </section>`;
+
+    container.innerHTML = html;
+  }
+
+  // Troca de abas com acessibilidade
+  const tabs = document.querySelectorAll('.tab');
+  const tabContents = document.querySelectorAll('.tab-content');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      // Atualiza selecionado
+      tabs.forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+        t.setAttribute('tabindex', '-1');
+      });
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+      tab.setAttribute('tabindex', '0');
+
+      // Mostrar conteúdo correspondente
+      const targetId = tab.getAttribute('aria-controls');
+      tabContents.forEach(tc => {
+        tc.classList.toggle('active', tc.id === targetId);
+      });
+
+      // Coloca foco no conteúdo
+      document.getElementById(targetId).focus();
+    });
+  });
+
+  // Busca filtro da análise
+  const inputBusca = document.getElementById('searchInput');
+  inputBusca.addEventListener('input', () => {
+    gerarAnalise(analiseDados, inputBusca.value);
+  });
+
+  // Inicializa conteúdo
+  gerarAnalise(analiseDados);
+  gerarRelatorio(relatorioDados);
+</script>
+
 </body>
 </html>
