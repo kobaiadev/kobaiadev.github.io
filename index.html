@@ -1,204 +1,397 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Relatório Geral – Furtos por Produto e Loja</title>
-  <style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Relatório de Perdas - Furtos por Produto e Loja</title>
+<style>
+  /* Reset básico */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4f8;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+  }
+  h1, h2, h3 {
+    color: #1a2a6c;
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  section {
+    background: white;
+    padding: 20px 30px;
+    margin-bottom: 30px;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  }
+  article {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  article:last-child {
+    border-bottom: none;
+  }
+  article:hover {
+    background-color: #e8f0fe;
+  }
+  article h3 {
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  article h3 span {
+    font-size: 0.9rem;
+    color: #555;
+  }
+  .detalhes {
+    margin-top: 10px;
+    display: none;
+    color: #444;
+    font-size: 0.95rem;
+  }
+  .valor-alto {
+    color: #e74c3c;
+    font-weight: 700;
+  }
+  .valor-baixo {
+    color: #27ae60;
+    font-weight: 700;
+  }
+  .nota {
+    font-style: italic;
+    color: #666;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+  }
+  th, td {
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+  }
+  th {
+    background-color: #1a2a6c;
+    color: white;
+    text-align: left;
+  }
+  /* Botões */
+  .btn {
+    background-color: #1a2a6c;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin: 5px 5px 15px 0;
+    transition: background-color 0.3s ease;
+  }
+  .btn:hover {
+    background-color: #274b9f;
+  }
+  /* Filtro */
+  #filtro-container {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+  #filtro-valor {
+    padding: 8px 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 180px;
+  }
+  /* Ícone toggle */
+  .toggle-icon {
+    font-weight: 900;
+    font-size: 1.3rem;
+    color: #1a2a6c;
+    transition: transform 0.3s ease;
+    margin-left: 10px;
+  }
+  .expanded .toggle-icon {
+    transform: rotate(90deg);
+  }
+  /* Responsivo */
+  @media (max-width: 600px) {
     body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      line-height: 1.5;
-      background: #f9f9f9;
-      color: #333;
-    }
-    h1, h2, h3 {
-      color: #2c3e50;
+      padding: 10px;
     }
     section {
-      margin-bottom: 40px;
-      background: white;
-      padding: 15px 25px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
-      border-radius: 6px;
+      padding: 15px 20px;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px 10px;
-      text-align: left;
-    }
-    th {
-      background-color: #2980b9;
-      color: white;
-    }
-    small {
-      color: #555;
-    }
-    .nota {
-      font-style: italic;
-      color: #666;
-      margin-top: 15px;
-    }
-    ul {
-      margin-top: 0;
-    }
-    .valor-alto {
-      color: #c0392b;
-      font-weight: bold;
-    }
-    .valor-baixo {
-      color: #27ae60;
-      font-weight: bold;
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
 
-  <h1>📊 RELATÓRIO GERAL – FURTOS POR PRODUTO E LOJA</h1>
+<h1>📊 Relatório Geral – Furtos por Produto e Loja</h1>
 
-  <!-- (Seções anteriores do relatório aqui - omitidas para foco na nova parte) -->
+<section id="analise-individualizada">
+  <h2>Análise Individualizada das Perdas – 2025 (Janeiro a Maio)</h2>
+  <div id="filtro-container">
+    <label for="filtro-valor">Exibir lojas com perdas totais ≥ R$</label>
+    <input type="number" id="filtro-valor" value="0" min="0" step="0.01" />
+    <button class="btn" id="btn-aplicar-filtro">Aplicar filtro</button>
+    <button class="btn" id="btn-expandir-tudo">Expandir tudo</button>
+    <button class="btn" id="btn-recolher-tudo">Recolher tudo</button>
+  </div>
 
-  <!-- Parte nova: Análise Individualizada das Perdas -->
-  <section>
-    <h2>📊 Análise Individualizada das Perdas – 2025 (Janeiro a Maio)</h2>
+  <div id="lojas-container">
+    <!-- Cada loja como article com toggle -->
+  </div>
+</section>
 
-    <article>
-      <h3>🏬 Loja 09</h3>
-      <p>Janeiro: 467,50 Brt<br/>
-         Fevereiro: 423,99 Brt<br/>
-         Março: 444,17 Brt<br/>
-         Abril: <span class="valor-alto">558,86 Brt 🔺</span><br/>
-         Maio: 414,55 Brt<br/>
-         <strong>Total:</strong> 2.309,07 Brt<br/>
-         <strong>Média Mensal:</strong> 461,81 Brt</p>
-      <p>🔎 Abril teve o maior valor registrado de perdas.</p>
-    </article>
+<section id="ranking">
+  <h2>Ranking de Perdas por Loja (Jan-Mai/2025)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>🏆 Posição</th>
+        <th>Loja</th>
+        <th>Total de Perdas (Brt)</th>
+        <th>Destaque</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1º</td><td>Loja 11</td><td>2.584,42</td><td>🚨 Maior total geral e março crítico</td></tr>
+      <tr><td>2º</td><td>Loja 09</td><td>2.309,07</td><td>Perdas consistentes e altas</td></tr>
+      <tr><td>3º</td><td>Loja 48</td><td>1.826,15</td><td>Pico crítico em março</td></tr>
+      <tr><td>4º</td><td>Loja 36</td><td>923,79</td><td>Volume médio, porém relevante</td></tr>
+      <tr><td>5º</td><td>Loja 28</td><td>892,33</td><td>Março com perdas elevadas</td></tr>
+      <tr><td>6º</td><td>Loja 25</td><td>784,57</td><td>Oscilação mensal visível</td></tr>
+      <tr><td>7º</td><td>Loja 53</td><td>733,22</td><td>Controle estável com exceção de janeiro</td></tr>
+      <tr><td>8º</td><td>Loja 10</td><td>165,32</td><td>✅ Melhor desempenho no controle de perdas</td></tr>
+    </tbody>
+  </table>
+</section>
 
-    <article>
-      <h3>🏬 Loja 10</h3>
-      <p>Janeiro: 18,73 Brt<br/>
-         Fevereiro: 47,21 Brt<br/>
-         Março: <span class="valor-alto">48,43 Brt 🔺</span><br/>
-         Abril: 28,70 Brt<br/>
-         Maio: 22,25 Brt<br/>
-         <strong>Total:</strong> 165,32 Brt<br/>
-         <strong>Média Mensal:</strong> 33,06 Brt</p>
-      <p class="valor-baixo">✅ Loja com menor volume total de perdas.</p>
-    </article>
+<section id="analise-geral">
+  <h2>Análise Geral (Jan-Mai/2025)</h2>
+  <p><strong>Total Geral de Perdas (todas as lojas):</strong> 10.218,87 Brt</p>
+  <p><strong>Média Geral Mensal (por loja):</strong> 255,47 Brt</p>
 
-    <article>
-      <h3>🏬 Loja 11</h3>
-      <p>Janeiro: 530,52 Brt<br/>
-         Fevereiro: 352,60 Brt<br/>
-         Março: <span class="valor-alto">721,69 Brt 🔺</span><br/>
-         Abril: 358,22 Brt<br/>
-         Maio: 621,39 Brt<br/>
-         <strong>Total:</strong> 2.584,42 Brt<br/>
-         <strong>Média Mensal:</strong> 516,88 Brt</p>
-      <p class="valor-alto">⚠️ Destaque: Maior perda total e maior valor em um único mês (março).</p>
-    </article>
+  <h3>✅ Destaques Positivos:</h3>
+  <ul>
+    <li>Loja 10: Eficiência na gestão de perdas — benchmark para as demais unidades.</li>
+  </ul>
 
-    <article>
-      <h3>🏬 Loja 25</h3>
-      <p>Janeiro: 59,96 Brt<br/>
-         Fevereiro: 108,17 Brt<br/>
-         Março: 154,24 Brt<br/>
-         Abril: <span class="valor-alto">234,07 Brt 🔺</span><br/>
-         Maio: 228,13 Brt<br/>
-         <strong>Total:</strong> 784,57 Brt<br/>
-         <strong>Média Mensal:</strong> 156,91 Brt</p>
-    </article>
+  <h3>⚠️ Pontos Críticos:</h3>
+  <ul>
+    <li>Loja 11 e Loja 48: Demandam atenção imediata, principalmente pelos picos registrados em março.</li>
+    <li>Loja 09: Apresenta perdas elevadas de forma constante.</li>
+  </ul>
+</section>
 
-    <article>
-      <h3>🏬 Loja 28</h3>
-      <p>Janeiro: 96,78 Brt<br/>
-         Fevereiro: 131,81 Brt<br/>
-         Março: <span class="valor-alto">324,99 Brt 🔺</span><br/>
-         Abril: 295,77 Brt<br/>
-         Maio: 42,98 Brt<br/>
-         <strong>Total:</strong> 892,33 Brt<br/>
-         <strong>Média Mensal:</strong> 178,47 Brt</p>
-    </article>
+<script>
+  // Dados das lojas com perdas para criar dinamicamente os artigos
+  const lojas = [
+    {
+      nome: "Loja 09",
+      valores: {
+        Janeiro: 467.50,
+        Fevereiro: 423.99,
+        Março: 444.17,
+        Abril: 558.86,
+        Maio: 414.55
+      },
+      total: 2309.07,
+      media: 461.81,
+      nota: "Abril teve o maior valor registrado de perdas.",
+      destaque: "abril"
+    },
+    {
+      nome: "Loja 10",
+      valores: {
+        Janeiro: 18.73,
+        Fevereiro: 47.21,
+        Março: 48.43,
+        Abril: 28.70,
+        Maio: 22.25
+      },
+      total: 165.32,
+      media: 33.06,
+      nota: "Loja com menor volume total de perdas.",
+      destaque: "menor"
+    },
+    {
+      nome: "Loja 11",
+      valores: {
+        Janeiro: 530.52,
+        Fevereiro: 352.60,
+        Março: 721.69,
+        Abril: 358.22,
+        Maio: 621.39
+      },
+      total: 2584.42,
+      media: 516.88,
+      nota: "Destaque: Maior perda total e maior valor em um único mês (março).",
+      destaque: "marco"
+    },
+    {
+      nome: "Loja 25",
+      valores: {
+        Janeiro: 59.96,
+        Fevereiro: 108.17,
+        Março: 154.24,
+        Abril: 234.07,
+        Maio: 228.13
+      },
+      total: 784.57,
+      media: 156.91,
+      nota: "",
+      destaque: "abril"
+    },
+    {
+      nome: "Loja 28",
+      valores: {
+        Janeiro: 96.78,
+        Fevereiro: 131.81,
+        Março: 324.99,
+        Abril: 295.77,
+        Maio: 42.98
+      },
+      total: 892.33,
+      media: 178.47,
+      nota: "",
+      destaque: "marco"
+    },
+    {
+      nome: "Loja 36",
+      valores: {
+        Janeiro: 175.85,
+        Fevereiro: 116.23,
+        Março: 246.21,
+        Abril: 195.54,
+        Maio: 189.96
+      },
+      total: 923.79,
+      media: 184.76,
+      nota: "",
+      destaque: "marco"
+    },
+    {
+      nome: "Loja 48",
+      valores: {
+        Janeiro: 340.18,
+        Fevereiro: 326.20,
+        Março: 754.34,
+        Abril: 210.11,
+        Maio: 195.32
+      },
+      total: 1826.15,
+      media: 365.23,
+      nota: "Março: maior valor de perdas entre todas as lojas.",
+      destaque: "marco"
+    },
+    {
+      nome: "Loja 53",
+      valores: {
+        Janeiro: 281.04,
+        Fevereiro: 63.68,
+        Março: 138.35,
+        Abril: 110.77,
+        Maio: 139.38
+      },
+      total: 733.22,
+      media: 146.64,
+      nota: "",
+      destaque: "janeiro"
+    }
+  ];
 
-    <article>
-      <h3>🏬 Loja 36</h3>
-      <p>Janeiro: 175,85 Brt<br/>
-         Fevereiro: 116,23 Brt<br/>
-         Março: <span class="valor-alto">246,21 Brt 🔺</span><br/>
-         Abril: 195,54 Brt<br/>
-         Maio: 189,96 Brt<br/>
-         <strong>Total:</strong> 923,79 Brt<br/>
-         <strong>Média Mensal:</strong> 184,76 Brt</p>
-    </article>
+  const container = document.getElementById("lojas-container");
 
-    <article>
-      <h3>🏬 Loja 48</h3>
-      <p>Janeiro: 340,18 Brt<br/>
-         Fevereiro: 326,20 Brt<br/>
-         Março: <span class="valor-alto">754,34 Brt 🔺</span><br/>
-         Abril: 210,11 Brt<br/>
-         Maio: 195,32 Brt<br/>
-         <strong>Total:</strong> 1.826,15 Brt<br/>
-         <strong>Média Mensal:</strong> 365,23 Brt</p>
-      <p class="valor-alto">⚠️ Março: maior valor de perdas entre todas as lojas.</p>
-    </article>
+  // Função para formatar número como moeda brasileira
+  function formatarValor(valor) {
+    return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
 
-    <article>
-      <h3>🏬 Loja 53</h3>
-      <p>Janeiro: <span class="valor-alto">281,04 Brt 🔺</span><br/>
-         Fevereiro: 63,68 Brt<br/>
-         Março: 138,35 Brt<br/>
-         Abril: 110,77 Brt<br/>
-         Maio: 139,38 Brt<br/>
-         <strong>Total:</strong> 733,22 Brt<br/>
-         <strong>Média Mensal:</strong> 146,64 Brt</p>
-    </article>
-  </section>
+  // Cria o HTML dos detalhes de cada loja
+  function criarDetalhes(loja) {
+    let html = `<div class="detalhes">`;
+    for (const [mes, valor] of Object.entries(loja.valores)) {
+      let destaque = "";
+      if (
+        (loja.destaque === "abril" && mes === "Abril") ||
+        (loja.destaque === "marco" && mes === "Março") ||
+        (loja.destaque === "janeiro" && mes === "Janeiro") ||
+        (loja.destaque === "menor" && loja.media === Math.min(...lojas.map(l => l.media)))
+      ) {
+        destaque = 'valor-alto';
+      }
+      html += `<p>${mes}: <span class="${destaque}">${formatarValor(valor)} Brt${destaque ? " 🔺" : ""}</span></p>`;
+    }
+    html += `<p><strong>Total:</strong> ${formatarValor(loja.total)} Brt</p>`;
+    html += `<p><strong>Média Mensal:</strong> ${formatarValor(loja.media)} Brt</p>`;
+    if(loja.nota) html += `<p class="nota">${loja.nota}</p>`;
+    html += `</div>`;
+    return html;
+  }
 
-  <section>
-    <h2>🥇 Ranking de Perdas por Loja (Jan-Mai/2025)</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>🏆 Posição</th>
-          <th>Loja</th>
-          <th>Total de Perdas (Brt)</th>
-          <th>Destaque</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>1º</td><td>Loja 11</td><td>2.584,42</td><td>🚨 Maior total geral e março crítico</td></tr>
-        <tr><td>2º</td><td>Loja 09</td><td>2.309,07</td><td>Perdas consistentes e altas</td></tr>
-        <tr><td>3º</td><td>Loja 48</td><td>1.826,15</td><td>Pico crítico em março</td></tr>
-        <tr><td>4º</td><td>Loja 36</td><td>923,79</td><td>Volume médio, porém relevante</td></tr>
-        <tr><td>5º</td><td>Loja 28</td><td>892,33</td><td>Março com perdas elevadas</td></tr>
-        <tr><td>6º</td><td>Loja 25</td><td>784,57</td><td>Oscilação mensal visível</td></tr>
-        <tr><td>7º</td><td>Loja 53</td><td>733,22</td><td>Controle estável com exceção de janeiro</td></tr>
-        <tr><td>8º</td><td>Loja 10</td><td>165,32</td><td>✅ Melhor desempenho no controle de perdas</td></tr>
-      </tbody>
-    </table>
-  </section>
+  // Monta artigos das lojas
+  function montarArtigos(lojasFiltradas) {
+    container.innerHTML = "";
+    lojasFiltradas.forEach(loja => {
+      const artigo = document.createElement("article");
+      artigo.innerHTML = `
+        <h3>${loja.nome} <span class="toggle-icon">▶</span></h3>
+        ${criarDetalhes(loja)}
+      `;
+      container.appendChild(artigo);
+    });
 
-  <section>
-    <h2>📈 Análise Geral (Jan-Mai/2025)</h2>
-    <p><strong>Total Geral de Perdas (todas as lojas):</strong> 10.218,87 Brt</p>
-    <p><strong>Média Geral Mensal (por loja):</strong> 255,47 Brt</p>
+    // Adiciona evento para toggle detalhes
+    document.querySelectorAll("#lojas-container article h3").forEach(header => {
+      header.addEventListener("click", () => {
+        const detalhes = header.nextElementSibling;
+        const article = header.parentElement;
+        if (detalhes.style.display === "block") {
+          detalhes.style.display = "none";
+          article.classList.remove("expanded");
+        } else {
+          detalhes.style.display = "block";
+          article.classList.add("expanded");
+        }
+      });
+    });
+  }
 
-    <h3>✅ Destaques Positivos:</h3>
-    <ul>
-      <li>Loja 10: Eficiência na gestão de perdas — benchmark para as demais unidades.</li>
-    </ul>
+  montarArtigos(lojas);
 
-    <h3>⚠️ Pontos Críticos:</h3>
-    <ul>
-      <li>Loja 11 e Loja 48: Demandam atenção imediata, principalmente pelos picos registrados em março.</li>
-      <li>Loja 09: Apresenta perdas elevadas de forma constante.</li>
-    </ul>
-  </section>
+  // Botões expandir/recolher tudo
+  document.getElementById("btn-expandir-tudo").addEventListener("click", () => {
+    document.querySelectorAll("#lojas-container article .detalhes").forEach(d => d.style.display = "block");
+    document.querySelectorAll("#lojas-container article").forEach(a => a.classList.add("expanded"));
+  });
+
+  document.getElementById("btn-recolher-tudo").addEventListener("click", () => {
+    document.querySelectorAll("#lojas-container article .detalhes").forEach(d => d.style.display = "none");
+    document.querySelectorAll("#lojas-container article").forEach(a => a.classList.remove("expanded"));
+  });
+
+  // Filtro por valor total mínimo
+  document.getElementById("btn-aplicar-filtro").addEventListener("click", () => {
+    const valorFiltro = parseFloat(document.getElementById("filtro-valor").value) || 0;
+    const filtradas = lojas.filter(l => l.total >= valorFiltro);
+    montarArtigos(filtradas);
+  });
+</script>
 
 </body>
 </html>
