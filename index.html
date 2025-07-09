@@ -2,19 +2,203 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Monitor de Notícias - Perdas no Varejo</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Relatório Geral – Furtos por Produto e Loja</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      line-height: 1.5;
+      background: #f9f9f9;
+      color: #333;
+    }
+    h1, h2, h3 {
+      color: #2c3e50;
+    }
+    section {
+      margin-bottom: 40px;
+      background: white;
+      padding: 15px 25px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      border-radius: 6px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #2980b9;
+      color: white;
+    }
+    small {
+      color: #555;
+    }
+    .nota {
+      font-style: italic;
+      color: #666;
+      margin-top: 15px;
+    }
+    ul {
+      margin-top: 0;
+    }
+    .valor-alto {
+      color: #c0392b;
+      font-weight: bold;
+    }
+    .valor-baixo {
+      color: #27ae60;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-  <h1>📰 Notícias sobre Furtos e Prevenção de Perdas</h1>
 
-  <h2>🌐 Notícias Gerais (GNews)</h2>
-  <div id="noticias">Carregando notícias...</div>
+  <h1>📊 RELATÓRIO GERAL – FURTOS POR PRODUTO E LOJA</h1>
 
-  <h2>🏪 Notícias da Abrappe</h2>
-  <div id="noticias-abrappe">Carregando notícias da Abrappe...</div>
+  <!-- (Seções anteriores do relatório aqui - omitidas para foco na nova parte) -->
 
-  <script src="script.js"></script>
+  <!-- Parte nova: Análise Individualizada das Perdas -->
+  <section>
+    <h2>📊 Análise Individualizada das Perdas – 2025 (Janeiro a Maio)</h2>
+
+    <article>
+      <h3>🏬 Loja 09</h3>
+      <p>Janeiro: 467,50 Brt<br/>
+         Fevereiro: 423,99 Brt<br/>
+         Março: 444,17 Brt<br/>
+         Abril: <span class="valor-alto">558,86 Brt 🔺</span><br/>
+         Maio: 414,55 Brt<br/>
+         <strong>Total:</strong> 2.309,07 Brt<br/>
+         <strong>Média Mensal:</strong> 461,81 Brt</p>
+      <p>🔎 Abril teve o maior valor registrado de perdas.</p>
+    </article>
+
+    <article>
+      <h3>🏬 Loja 10</h3>
+      <p>Janeiro: 18,73 Brt<br/>
+         Fevereiro: 47,21 Brt<br/>
+         Março: <span class="valor-alto">48,43 Brt 🔺</span><br/>
+         Abril: 28,70 Brt<br/>
+         Maio: 22,25 Brt<br/>
+         <strong>Total:</strong> 165,32 Brt<br/>
+         <strong>Média Mensal:</strong> 33,06 Brt</p>
+      <p class="valor-baixo">✅ Loja com menor volume total de perdas.</p>
+    </article>
+
+    <article>
+      <h3>🏬 Loja 11</h3>
+      <p>Janeiro: 530,52 Brt<br/>
+         Fevereiro: 352,60 Brt<br/>
+         Março: <span class="valor-alto">721,69 Brt 🔺</span><br/>
+         Abril: 358,22 Brt<br/>
+         Maio: 621,39 Brt<br/>
+         <strong>Total:</strong> 2.584,42 Brt<br/>
+         <strong>Média Mensal:</strong> 516,88 Brt</p>
+      <p class="valor-alto">⚠️ Destaque: Maior perda total e maior valor em um único mês (março).</p>
+    </article>
+
+    <article>
+      <h3>🏬 Loja 25</h3>
+      <p>Janeiro: 59,96 Brt<br/>
+         Fevereiro: 108,17 Brt<br/>
+         Março: 154,24 Brt<br/>
+         Abril: <span class="valor-alto">234,07 Brt 🔺</span><br/>
+         Maio: 228,13 Brt<br/>
+         <strong>Total:</strong> 784,57 Brt<br/>
+         <strong>Média Mensal:</strong> 156,91 Brt</p>
+    </article>
+
+    <article>
+      <h3>🏬 Loja 28</h3>
+      <p>Janeiro: 96,78 Brt<br/>
+         Fevereiro: 131,81 Brt<br/>
+         Março: <span class="valor-alto">324,99 Brt 🔺</span><br/>
+         Abril: 295,77 Brt<br/>
+         Maio: 42,98 Brt<br/>
+         <strong>Total:</strong> 892,33 Brt<br/>
+         <strong>Média Mensal:</strong> 178,47 Brt</p>
+    </article>
+
+    <article>
+      <h3>🏬 Loja 36</h3>
+      <p>Janeiro: 175,85 Brt<br/>
+         Fevereiro: 116,23 Brt<br/>
+         Março: <span class="valor-alto">246,21 Brt 🔺</span><br/>
+         Abril: 195,54 Brt<br/>
+         Maio: 189,96 Brt<br/>
+         <strong>Total:</strong> 923,79 Brt<br/>
+         <strong>Média Mensal:</strong> 184,76 Brt</p>
+    </article>
+
+    <article>
+      <h3>🏬 Loja 48</h3>
+      <p>Janeiro: 340,18 Brt<br/>
+         Fevereiro: 326,20 Brt<br/>
+         Março: <span class="valor-alto">754,34 Brt 🔺</span><br/>
+         Abril: 210,11 Brt<br/>
+         Maio: 195,32 Brt<br/>
+         <strong>Total:</strong> 1.826,15 Brt<br/>
+         <strong>Média Mensal:</strong> 365,23 Brt</p>
+      <p class="valor-alto">⚠️ Março: maior valor de perdas entre todas as lojas.</p>
+    </article>
+
+    <article>
+      <h3>🏬 Loja 53</h3>
+      <p>Janeiro: <span class="valor-alto">281,04 Brt 🔺</span><br/>
+         Fevereiro: 63,68 Brt<br/>
+         Março: 138,35 Brt<br/>
+         Abril: 110,77 Brt<br/>
+         Maio: 139,38 Brt<br/>
+         <strong>Total:</strong> 733,22 Brt<br/>
+         <strong>Média Mensal:</strong> 146,64 Brt</p>
+    </article>
+  </section>
+
+  <section>
+    <h2>🥇 Ranking de Perdas por Loja (Jan-Mai/2025)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>🏆 Posição</th>
+          <th>Loja</th>
+          <th>Total de Perdas (Brt)</th>
+          <th>Destaque</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1º</td><td>Loja 11</td><td>2.584,42</td><td>🚨 Maior total geral e março crítico</td></tr>
+        <tr><td>2º</td><td>Loja 09</td><td>2.309,07</td><td>Perdas consistentes e altas</td></tr>
+        <tr><td>3º</td><td>Loja 48</td><td>1.826,15</td><td>Pico crítico em março</td></tr>
+        <tr><td>4º</td><td>Loja 36</td><td>923,79</td><td>Volume médio, porém relevante</td></tr>
+        <tr><td>5º</td><td>Loja 28</td><td>892,33</td><td>Março com perdas elevadas</td></tr>
+        <tr><td>6º</td><td>Loja 25</td><td>784,57</td><td>Oscilação mensal visível</td></tr>
+        <tr><td>7º</td><td>Loja 53</td><td>733,22</td><td>Controle estável com exceção de janeiro</td></tr>
+        <tr><td>8º</td><td>Loja 10</td><td>165,32</td><td>✅ Melhor desempenho no controle de perdas</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>📈 Análise Geral (Jan-Mai/2025)</h2>
+    <p><strong>Total Geral de Perdas (todas as lojas):</strong> 10.218,87 Brt</p>
+    <p><strong>Média Geral Mensal (por loja):</strong> 255,47 Brt</p>
+
+    <h3>✅ Destaques Positivos:</h3>
+    <ul>
+      <li>Loja 10: Eficiência na gestão de perdas — benchmark para as demais unidades.</li>
+    </ul>
+
+    <h3>⚠️ Pontos Críticos:</h3>
+    <ul>
+      <li>Loja 11 e Loja 48: Demandam atenção imediata, principalmente pelos picos registrados em março.</li>
+      <li>Loja 09: Apresenta perdas elevadas de forma constante.</li>
+    </ul>
+  </section>
+
 </body>
 </html>
