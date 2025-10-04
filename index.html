@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Dashboard e relatórios para gestão de perdas em lojas. Projetos, análises e integrações por Daniel." />
+  <meta property="og:title" content="Daniel — Monitor de Notícias & Gestão de Perdas" />
+  <meta property="og:description" content="Dashboard e relatórios para redução de perdas, automações e visualização de dados." />
+  <meta property="og:type" content="website" />
 <title>Monitor de Notícias e Relatórios - Gestão de Perdas - Lojas do Vale</title>
 
 <!-- Fonte Inter -->
@@ -148,6 +152,8 @@
 </style>
 </head>
 <body>
+
+<a class="skip-link" href="#projetos">Ir para o conteúdo principal</a>
 
 <h1>Daniel — Monitor de Notícias & Gestão de Perdas</h1>
 
@@ -504,16 +510,9 @@
     });
   });
 
-  // Busca filtro da análise
-  const inputBusca = document.getElementById('searchInput');
-  inputBusca.addEventListener('input', () => {
-    gerarAnalise(analiseDados, inputBusca.value);
-  });
-
-  // Inicializa conteúdo
-  gerarAnalise(analiseDados);
-  gerarRelatorio(relatorioDados);
-</script>
+  
+  <!-- O JavaScript principal foi movido para script.js (carregado com defer) -->
+  <script src="script.js" defer></script>
 
 </body>
 </html>
