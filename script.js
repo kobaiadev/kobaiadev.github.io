@@ -134,8 +134,45 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     carregarNoticias();
     carregarNoticiasAbrappe();
+    renderProjects();
   });
 } else {
   carregarNoticias();
   carregarNoticiasAbrappe();
+  renderProjects();
+}
+
+// ----------------------
+// Projects (case studies) - render simples para portfolio
+const projectsData = [
+  {
+    id: 'loja-11',
+    title: 'Análise Individualizada — Loja 11',
+    summary: 'Painel analítico mensal para identificar picos de perdas e gerar alertas operacionais.',
+    tags: ['HTML', 'JavaScript', 'Relatórios'],
+    thumbnailText: 'Loja 11',
+    url: 'projects/loja-11.html'
+  }
+];
+
+function renderProjects() {
+  const container = document.getElementById('projects');
+  if (!container) return;
+  container.innerHTML = '';
+  const grid = document.createElement('div');
+  grid.className = 'noticias-grid-inner';
+  projectsData.forEach(p => {
+    const card = document.createElement('article');
+    card.className = 'project-card';
+    card.innerHTML = `
+      <a class="card-link" href="${p.url}">
+        <div class="project-thumbnail">${p.thumbnailText}</div>
+        <h3 class="card-title">${p.title}</h3>
+        <p class="card-desc">${p.summary}</p>
+        <div class="project-tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+      </a>
+    `;
+    grid.appendChild(card);
+  });
+  container.appendChild(grid);
 }
