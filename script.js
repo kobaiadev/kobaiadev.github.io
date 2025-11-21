@@ -1,3 +1,6 @@
+/********************************************
+ * 1) NOTÍCIAS GNEWS
+ ********************************************/
 const API_KEY = "5b7b286d2bdcfe133230f8b2f2ee5315";
 const QUERY = "supermercado segurança OR furto OR roubo OR perda";
 const URL = `https://gnews.io/api/v4/search?q=${encodeURIComponent(QUERY)}&lang=pt&token=${API_KEY}&max=10`;
@@ -32,6 +35,9 @@ async function carregarNoticias() {
   }
 }
 
+/********************************************
+ * 2) NOTÍCIAS ABRAPPE
+ ********************************************/
 async function carregarNoticiasAbrappe() {
   const container = document.getElementById("noticias-abrappe");
   container.innerHTML = "<p>Carregando notícias da Abrappe...</p>";
@@ -62,3 +68,92 @@ async function carregarNoticiasAbrappe() {
 
 carregarNoticias();
 carregarNoticiasAbrappe();
+
+/********************************************
+ * 3) JSON DE PERDAS
+ ********************************************/
+const perdasData = [
+  {
+    loja: 9,
+    ano2024: { Janeiro: 187.88, Fevereiro: 212.64, Março: 230.75 },
+    ano2025: { Janeiro: 467.50, Fevereiro: null, Março: null }
+  },
+  {
+    loja: 11,
+    ano2024: { Janeiro: 144.55, Fevereiro: 199.10, Março: 210.00 },
+    ano2025: { Janeiro: 522.10, Fevereiro: null, Março: null }
+  },
+  {
+    loja: 25,
+    ano2024: { Janeiro: 155.77, Fevereiro: 180.20, Março: 207.90 },
+    ano2025: { Janeiro: 312.44, Fevereiro: null, Março: null }
+  }
+];
+
+/********************************************
+ * 4) GERAR GRÁFICOS COM PLOTLY
+ ********************************************/
+function gerarGraficos() {
+
+  // ----- GRÁFICO 1 -----
+  const lojas = perdasData.map(d => "Loja " + d.loja);
+  const perdas2024 = perdasData.map(d => d.ano2024.Janeiro);
+  const perdas2025 = perdasData.map(d => d.ano2025.Janeiro);
+
+  Plotly.newPlot("grafico1", [
+    { x: lojas, y: perdas2024, type: "bar", name: "2024" },
+    { x: lojas, y: perdas2025, type: "bar", name: "2025" }
+  ], {
+    title: "Comparativo de Perdas – Janeiro 2024 x 2025"
+  });
+
+  // ----- GRÁFICO 2 -----
+  const meses = ["Jan", "Fev", "Mar"];
+
+  const series = perdasData.map(loja => ({
+    x: meses,
+    y: [
+      loja.ano2024.Janeiro,
+      loja.ano2024.Fevereiro,
+      loja.ano2024.Março
+    ],
+    mode: "lines+markers",
+    name: "Loja " + loja.loja
+  }));
+
+  Plotly.newPlot("grafico2", series, {
+    title: "Tendência Mensal de Perdas – 2024"
+  });
+
+  // ----- GRÁFICO 3 -----
+  const ranking = perdasData.map(l => ({
+    loja: l.loja,
+    total:
+      l.ano2024.Janeiro +
+      l.ano2024.Fevereiro +
+      l.ano2024.Março
+  }));
+
+  Plotly.newPlot("grafico3", [
+    {
+      x: ranking.map(r => "Loja " + r.loja),
+      y: ranking.map(r => r.total),
+      type: "bar",
+      name: "Ranking"
+    }
+  ], {
+    title: "Ranking de Perdas por Loja – 2024"
+  });
+}
+
+gerarGraficos();
+
+/********************************************
+ * 5) EXPORTAÇÃO PNG
+ ********************************************/
+function baixarGrafico(id, nome) {
+  Plotly.downloadImage(document.getElementById(id), {
+    format: "png",
+    filename: nome
+  });
+}
