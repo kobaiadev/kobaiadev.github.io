@@ -1,71 +1,96 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Monitoramento — Notícias & Perdas</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background: #f5f5f5;
-        }
-        h2 {
-            margin-top: 40px;
-        }
-        .noticia {
-            background: white;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 6px;
-            border-left: 4px solid #0078ff;
-        }
-        button {
-            margin: 10px 0;
-            padding: 8px 14px;
-            background: #0078ff;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-        button:hover {
-            opacity: 0.8;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <title>Monitoramento — Notícias & Perdas</title>
 
-    <!-- PLOTLY -->
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <!-- Seu CSS existente (mantido) -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f3f3f3;
+      margin: 2rem;
+      color: #222;
+    }
 
+    h1 {
+      color: #0066cc;
+    }
+
+    .noticia {
+      background-color: white;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .noticia a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .noticia a:hover {
+      text-decoration: underline;
+    }
+
+    /* layout gráfico */
+    .charts-wrap { display: grid; gap: 18px; margin-top: 1rem; }
+    .big { grid-column: 1 / -1; background: white; padding: 12px; border-radius:8px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+    .grid-two { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+    .store-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(320px,1fr)); gap:12px; margin-top:12px; }
+
+    .card { background:white; padding:10px; border-radius:8px; border:1px solid #e6e6e6; box-shadow:0 1px 2px rgba(0,0,0,0.04); }
+    .controls { display:flex; gap:8px; align-items:center; margin-bottom:8px; flex-wrap:wrap; }
+    .btn { padding:6px 10px; border-radius:6px; border:1px solid #ccc; background:#fff; cursor:pointer; }
+  </style>
+
+  <!-- Plotly -->
+  <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
 </head>
 <body>
+  <h1>📊 Dashboard — Notícias & Perdas</h1>
 
-    <h1>📊 Dashboard — Notícias e Perdas</h1>
+  <h2>📰 Notícias sobre Segurança no Varejo</h2>
+  <div id="noticias"></div>
 
-    <!-- Notícias GNews -->
-    <h2>📰 Notícias sobre Segurança no Varejo</h2>
-    <div id="noticias"></div>
+  <h2>🛡 Notícias da Abrappe</h2>
+  <div id="noticias-abrappe"></div>
 
-    <!-- Notícias Abrappe -->
-    <h2>🛡 Notícias da Abrappe</h2>
-    <div id="noticias-abrappe"></div>
+  <h2>📈 Gráficos de Perdas</h2>
 
-    <!-- Gráficos -->
-    <h2>📈 Gráficos de Perdas</h2>
+  <div class="charts-wrap">
+    <!-- Comparativo geral -->
+    <div class="big card">
+      <div class="controls">
+        <strong>Comparativo Anual por Loja (Total 2024 × 2025)</strong>
+        <button class="btn" id="download-comp-png">Baixar PNG</button>
+        <button class="btn" id="download-comp-svg">Baixar SVG</button>
+      </div>
+      <div id="chart-comparativo" style="height:420px;"></div>
+    </div>
 
-    <h3>Comparativo 2024 × 2025</h3>
-    <div id="grafico1" style="height:400px;"></div>
-    <button onclick="baixarGrafico('grafico1','comparativo')">Baixar PNG</button>
+    <!-- Seletores -->
+    <div class="card">
+      <div class="controls">
+        <label for="select-loja"><strong>Selecionar loja (gráfico individual):</strong></label>
+        <select id="select-loja"></select>
+        <button class="btn" id="download-loja-png">Baixar PNG</button>
+        <button class="btn" id="download-loja-svg">Baixar SVG</button>
+      </div>
+      <div id="chart-loja" style="height:360px;"></div>
+    </div>
 
-    <h3>Tendência Mensal (2024)</h3>
-    <div id="grafico2" style="height:400px;"></div>
-    <button onclick="baixarGrafico('grafico2','tendencia')">Baixar PNG</button>
+    <!-- Múltiplos gráficos individuais (todos as lojas em small multiples) -->
+    <div class="card big">
+      <div class="controls">
+        <strong>Gráficos individuais por loja (2024 × 2025)</strong>
+        <button class="btn" id="download-all-png">Baixar PNG (comparativo geral)</button>
+      </div>
+      <div id="stores-container" class="store-grid"></div>
+    </div>
+  </div>
 
-    <h3>Ranking de Perdas (2024)</h3>
-    <div id="grafico3" style="height:400px;"></div>
-    <button onclick="baixarGrafico('grafico3','ranking')">Baixar PNG</button>
-
-    <!-- JavaScript -->
-    <script src="script.js"></script>
-
+  <!-- script.js embutido abaixo -->
+  <script src="script.js"></script>
 </body>
 </html>
