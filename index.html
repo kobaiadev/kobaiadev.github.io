@@ -28,8 +28,82 @@
 
         canvas {
             width: 100%;
-            max-width: 900px;
         }
+
+        /* pesquisa UI */
+        .consulta-container {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin-bottom: 1rem;
+            display: flex;
+            gap: .5rem;
+            align-items: center;
+        }
+
+        .consulta-container input[type="text"] {
+            flex: 1;
+            padding: .5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .consulta-container button {
+            padding: .5rem 1rem;
+            border: none;
+            background: #0066cc;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* modal simples */
+        .modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.4);
+            z-index: 9999;
+        }
+
+        .modal.open { display: flex; }
+
+        .modal-box {
+            background: white;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80%;
+            overflow: auto;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 6px 30px rgba(0,0,0,0.2);
+        }
+
+        .modal-box pre {
+            white-space: pre-wrap;
+            word-break: break-word;
+            background: #f7f7f7;
+            padding: .5rem;
+            border-radius: 4px;
+            border: 1px solid #eee;
+        }
+
+        .modal-actions {
+            margin-top: .5rem;
+            text-align: right;
+        }
+
+        .modal-actions button {
+            padding: .4rem .8rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-close { background: #777; color: white; }
     </style>
 </head>
 
@@ -37,16 +111,35 @@
 
     <h1>Gráfico Comparativo de Perdas (2024 vs 2025)</h1>
 
+    <!-- pesquisa por loja -->
+    <div class="consulta-container">
+        <label for="consulta-loja" style="white-space:nowrap;">Consultar loja:</label>
+        <input id="consulta-loja" type="text" placeholder="Ex: 09, loja 09, LOJA 9, Loja09">
+        <button id="btn-consultar">Consultar</button>
+    </div>
+
     <!-- Gráfico geral -->
     <div class="grafico-container">
         <h2>Geral: Todas as Lojas</h2>
-        <canvas id="graficoGeral"></canvas>
+        <canvas id="graficoGeral" width="900" height="400"></canvas>
     </div>
 
     <!-- Aqui entrarão os gráficos individuais -->
     <div id="graficos-lojas"></div>
 
-    <script src="script.js"></script>
+    <!-- modal de exibição dos dados da loja -->
+    <div id="modal-dados" class="modal" role="dialog" aria-hidden="true">
+        <div class="modal-box" role="document">
+            <h3 id="modal-titulo">Dados da Loja</h3>
+            <div id="modal-conteudo">
+                <pre id="modal-json">Carregando...</pre>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-close" id="btn-fechar">Fechar</button>
+            </div>
+        </div>
+    </div>
 
+    <script src="script.js" defer></script>
 </body>
 </html>
