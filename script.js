@@ -25,18 +25,12 @@ function criarGrafico(idCanvas, titulo, labels, valores2024, valores2025) {
                 {
                     label: "2024",
                     data: valores2024,
-                    borderWidth: 2,
-                    tension: 0.3,
-                    borderColor: "rgba(54, 162, 235, 1)",
-                    backgroundColor: "rgba(54, 162, 235, 0.2)",
+                    borderWidth: 2
                 },
                 {
                     label: "2025",
                     data: valores2025,
-                    borderWidth: 2,
-                    tension: 0.3,
-                    borderColor: "rgba(255, 99, 132, 1)",
-                    backgroundColor: "rgba(255, 99, 132, 0.2)",
+                    borderWidth: 2
                 }
             ]
         },
@@ -44,11 +38,6 @@ function criarGrafico(idCanvas, titulo, labels, valores2024, valores2025) {
             responsive: true,
             plugins: {
                 title: { display: true, text: titulo }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
             }
         }
     });
@@ -66,8 +55,8 @@ function prepararSeries(dadosLoja) {
     dadosLoja.forEach(item => {
         const idx = mesesOrd.indexOf(item.Mês);
         if (idx >= 0) {
-            if (item.Ano === 2024) valores2024[idx] = item.Perdas ?? null;
-            if (item.Ano === 2025) valores2025[idx] = item.Perdas ?? null;
+            if (item.Ano === 2024) valores2024[idx] = item.Perdas;
+            if (item.Ano === 2025) valores2025[idx] = item.Perdas;
         }
     });
 
@@ -79,29 +68,19 @@ async function montarGraficos() {
     const lojas = agruparPorLoja(dados);
 
     // --- GRÁFICO GERAL ---
-    const mesesOrd = [
-        "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
-        "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
-    ];
-
-    const todas2024 = new Array(12).fill(0);
-    const todas2025 = new Array(12).fill(0);
+    const todas2024 = [];
+    const todas2025 = [];
 
     Object.values(lojas).forEach(loja => {
         const group = prepararSeries(loja);
-
-        group.valores2024.forEach((v, i) => {
-            if (v !== null) todas2024[i] += v;
-        });
-        group.valores2025.forEach((v, i) => {
-            if (v !== null) todas2025[i] += v;
-        });
+        group.valores2024.forEach(v => todas2024.push(v));
+        group.valores2025.forEach(v => todas2025.push(v));
     });
 
     criarGrafico(
         "graficoGeral",
         "Comparativo Geral de Perdas",
-        mesesOrd,
+        Array.from({ length: 12 }, (_, i) => i + 1),
         todas2024,
         todas2025
     );
@@ -117,7 +96,7 @@ async function montarGraficos() {
         const div = document.createElement("div");
         div.className = "grafico-container";
 
-        const idCanvas = `grafico-${lojaNome.replace(/\s/g, "")}`;
+        const idCanvas = `grafico-${lojaNome.replace(" ", "")}`;
 
         div.innerHTML = `
             <h2>${lojaNome}</h2>
