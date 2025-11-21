@@ -2,200 +2,51 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Perdas</title>
-
-    <!-- Chart.js -->
+    <title>Gráficos de Perdas por Loja</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #f4f6f9;
-            margin: 0;
-            padding: 20px;
+            background-color: #f3f3f3;
+            margin: 2rem;
+            color: #222;
         }
 
         h1 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 26px;
-        }
-
-        h2 {
-            margin-top: 30px;
-            text-align: center;
+            color: #0066cc;
         }
 
         .grafico-container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
-        }
-
-        #graficos-lojas {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 25px;
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
         canvas {
-            width: 100% !important;
-            height: 300px !important;
+            width: 100%;
+            max-width: 900px;
         }
     </style>
 </head>
 
 <body>
 
-    <h1>Dashboard Comparativo de Perdas 2024 x 2025</h1>
+    <h1>Gráfico Comparativo de Perdas (2024 vs 2025)</h1>
 
-    <!-- Gráfico Geral -->
+    <!-- Gráfico geral -->
     <div class="grafico-container">
-        <h2>Geral Consolidado</h2>
+        <h2>Geral: Todas as Lojas</h2>
         <canvas id="graficoGeral"></canvas>
     </div>
 
-    <!-- Gráficos por Loja -->
-    <h2>Comparativo por Loja</h2>
+    <!-- Aqui entrarão os gráficos individuais -->
     <div id="graficos-lojas"></div>
 
-    <!-- SCRIPT PRINCIPAL (JS) -->
-    <script>
-        async function carregarDados() {
-            const resposta = await fetch("perdas.json");
-            return resposta.json();
-        }
-
-        function agruparPorLoja(dados) {
-            const lojas = {};
-
-            dados.forEach(item => {
-                if (!lojas[item.Loja]) {
-                    lojas[item.Loja] = [];
-                }
-                lojas[item.Loja].push(item);
-            });
-
-            return lojas;
-        }
-
-        function criarGrafico(idCanvas, titulo, labels, valores2024, valores2025) {
-            new Chart(document.getElementById(idCanvas), {
-                type: "line",
-                data: {
-                    labels,
-                    datasets: [
-                        {
-                            label: "2024",
-                            data: valores2024,
-                            borderWidth: 2,
-                            tension: 0.3,
-                            borderColor: "rgba(54, 162, 235, 1)",
-                            backgroundColor: "rgba(54, 162, 235, 0.2)",
-                        },
-                        {
-                            label: "2025",
-                            data: valores2025,
-                            borderWidth: 2,
-                            tension: 0.3,
-                            borderColor: "rgba(255, 99, 132, 1)",
-                            backgroundColor: "rgba(255, 99, 132, 0.2)",
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        title: { display: true, text: titulo }
-                    },
-                    scales: {
-                        y: { beginAtZero: true }
-                    }
-                }
-            });
-        }
-
-        function prepararSeries(dadosLoja) {
-            const mesesOrd = [
-                "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
-                "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
-            ];
-
-            const valores2024 = new Array(12).fill(null);
-            const valores2025 = new Array(12).fill(null);
-
-            dadosLoja.forEach(item => {
-                const idx = mesesOrd.indexOf(item.Mês);
-                if (idx >= 0) {
-                    if (item.Ano === 2024) valores2024[idx] = item.Perdas ?? null;
-                    if (item.Ano === 2025) valores2025[idx] = item.Perdas ?? null;
-                }
-            });
-
-            return { mesesOrd, valores2024, valores2025 };
-        }
-
-        async function montarGraficos() {
-            const dados = await carregarDados();
-            const lojas = agruparPorLoja(dados);
-
-            // --- GRÁFICO GERAL ---
-            const mesesOrd = [
-                "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
-                "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
-            ];
-
-            const todas2024 = new Array(12).fill(0);
-            const todas2025 = new Array(12).fill(0);
-
-            Object.values(lojas).forEach(loja => {
-                const group = prepararSeries(loja);
-
-                group.valores2024.forEach((v, i) => {
-                    if (v !== null) todas2024[i] += v;
-                });
-                group.valores2025.forEach((v, i) => {
-                    if (v !== null) todas2025[i] += v;
-                });
-            });
-
-            criarGrafico(
-                "graficoGeral",
-                "Comparativo Geral de Perdas",
-                mesesOrd,
-                todas2024,
-                todas2025
-            );
-
-            // --- GRÁFICOS POR LOJA ---
-            const container = document.getElementById("graficos-lojas");
-            container.innerHTML = "";
-
-            Object.keys(lojas).forEach(lojaNome => {
-                const lojaDados = lojas[lojaNome];
-                const { mesesOrd, valores2024, valores2025 } = prepararSeries(lojaDados);
-
-                const div = document.createElement("div");
-                div.className = "grafico-container";
-
-                const idCanvas = `grafico-${lojaNome.replace(/\s/g, "")}`;
-
-                div.innerHTML = `
-                    <h3>${lojaNome}</h3>
-                    <canvas id="${idCanvas}"></canvas>
-                `;
-
-                container.appendChild(div);
-
-                criarGrafico(idCanvas, lojaNome, mesesOrd, valores2024, valores2025);
-            });
-        }
-
-        montarGraficos();
-    </script>
+    <script src="script.js"></script>
 
 </body>
 </html>
