@@ -1,158 +1,71 @@
-/********************************************
- * 1) NOTÍCIAS GNEWS
- ********************************************/
-const API_KEY = "5b7b286d2bdcfe133230f8b2f2ee5315";
-const QUERY = "supermercado segurança OR furto OR roubo OR perda";
-const URL = `https://gnews.io/api/v4/search?q=${encodeURIComponent(QUERY)}&lang=pt&token=${API_KEY}&max=10`;
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Monitoramento — Notícias & Perdas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        h2 {
+            margin-top: 40px;
+        }
+        .noticia {
+            background: white;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border-left: 4px solid #0078ff;
+        }
+        button {
+            margin: 10px 0;
+            padding: 8px 14px;
+            background: #0078ff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+    </style>
 
-async function carregarNoticias() {
-  const container = document.getElementById("noticias");
-  container.innerHTML = "<p>Carregando...</p>";
+    <!-- PLOTLY -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
-  try {
-    const response = await fetch(URL);
-    const data = await response.json();
+</head>
+<body>
 
-    if (!data.articles || data.articles.length === 0) {
-      container.innerHTML = "<p>Nenhuma notícia encontrada.</p>";
-      return;
-    }
+    <h1>📊 Dashboard — Notícias e Perdas</h1>
 
-    container.innerHTML = "";
-    data.articles.forEach(article => {
-      const div = document.createElement("div");
-      div.className = "noticia";
-      div.innerHTML = `
-        <h3><a href="${article.url}" target="_blank">${article.title}</a></h3>
-        <p>${article.description || ""}</p>
-        <small><strong>${article.source.name}</strong> - ${new Date(article.publishedAt).toLocaleDateString()}</small>
-      `;
-      container.appendChild(div);
-    });
-  } catch (error) {
-    container.innerHTML = "<p>Erro ao carregar notícias.</p>";
-    console.error("Erro ao buscar notícias:", error);
-  }
-}
+    <!-- Notícias GNews -->
+    <h2>📰 Notícias sobre Segurança no Varejo</h2>
+    <div id="noticias"></div>
 
-/********************************************
- * 2) NOTÍCIAS ABRAPPE
- ********************************************/
-async function carregarNoticiasAbrappe() {
-  const container = document.getElementById("noticias-abrappe");
-  container.innerHTML = "<p>Carregando notícias da Abrappe...</p>";
+    <!-- Notícias Abrappe -->
+    <h2>🛡 Notícias da Abrappe</h2>
+    <div id="noticias-abrappe"></div>
 
-  try {
-    const res = await fetch("https://SEU_WORKER.cloudflare.workers.dev/api/abrappe");
-    const dados = await res.json();
+    <!-- Gráficos -->
+    <h2>📈 Gráficos de Perdas</h2>
 
-    if (dados.length === 0) {
-      container.innerHTML = "<p>Nenhuma notícia da Abrappe encontrada.</p>";
-      return;
-    }
+    <h3>Comparativo 2024 × 2025</h3>
+    <div id="grafico1" style="height:400px;"></div>
+    <button onclick="baixarGrafico('grafico1','comparativo')">Baixar PNG</button>
 
-    container.innerHTML = "";
-    dados.forEach(noticia => {
-      const div = document.createElement("div");
-      div.className = "noticia";
-      div.innerHTML = `
-        <h3><a href="${noticia.link}" target="_blank">${noticia.titulo}</a></h3>
-      `;
-      container.appendChild(div);
-    });
-  } catch (e) {
-    container.innerHTML = "<p>Erro ao carregar notícias da Abrappe.</p>";
-    console.error(e);
-  }
-}
+    <h3>Tendência Mensal (2024)</h3>
+    <div id="grafico2" style="height:400px;"></div>
+    <button onclick="baixarGrafico('grafico2','tendencia')">Baixar PNG</button>
 
-carregarNoticias();
-carregarNoticiasAbrappe();
+    <h3>Ranking de Perdas (2024)</h3>
+    <div id="grafico3" style="height:400px;"></div>
+    <button onclick="baixarGrafico('grafico3','ranking')">Baixar PNG</button>
 
-/********************************************
- * 3) JSON DE PERDAS (SEU ARQUIVO TRANSFORMADO)
- ********************************************/
-const perdasData = [
-  {
-    loja: 9,
-    ano2024: { Janeiro: 187.88, Fevereiro: 212.64, Março: 230.75 },
-    ano2025: { Janeiro: 467.50, Fevereiro: null, Março: null }
-  },
-  {
-    loja: 11,
-    ano2024: { Janeiro: 144.55, Fevereiro: 199.10, Março: 210.00 },
-    ano2025: { Janeiro: 522.10, Fevereiro: null, Março: null }
-  },
-  {
-    loja: 25,
-    ano2024: { Janeiro: 155.77, Fevereiro: 180.20, Março: 207.90 },
-    ano2025: { Janeiro: 312.44, Fevereiro: null, Março: null }
-  }
-];
+    <!-- JavaScript -->
+    <script src="script.js"></script>
 
-/********************************************
- * 4) GERAR GRÁFICOS COM PLOTLY
- ********************************************/
-function gerarGraficos() {
-  
-  // ---------- GRÁFICO 1: COMPARATIVO 2024 X 2025 ----------
-  const lojas = perdasData.map(d => "Loja " + d.loja);
-  const perdas2024 = perdasData.map(d => d.ano2024.Janeiro);
-  const perdas2025 = perdasData.map(d => d.ano2025.Janeiro);
-
-  const trace1 = { x: lojas, y: perdas2024, type: "bar", name: "2024" };
-  const trace2 = { x: lojas, y: perdas2025, type: "bar", name: "2025" };
-
-  Plotly.newPlot("grafico1", [trace1, trace2], {
-    title: "Comparativo de Perdas – Janeiro 2024 x 2025"
-  });
-
-  
-  // ---------- GRÁFICO 2: TENDÊNCIA POR LOJA ----------
-  const meses = ["Jan", "Fev", "Mar"];
-
-  const linhas = perdasData.map(loja => ({
-    x: meses,
-    y: [
-      loja.ano2024.Janeiro,
-      loja.ano2024.Fevereiro,
-      loja.ano2024.Março
-    ],
-    mode: "lines+markers",
-    name: "Loja " + loja.loja
-  }));
-
-  Plotly.newPlot("grafico2", linhas, {
-    title: "Tendência Mensal de Perdas (2024)"
-  });
-
-  
-  // ---------- GRÁFICO 3: RANKING DE PERDAS ----------
-  const total = perdasData.map(d => ({
-    loja: d.loja,
-    total: d.ano2024.Janeiro + d.ano2024.Fevereiro + d.ano2024.Março
-  }));
-
-  const traceRanking = {
-    x: total.map(t => "Loja " + t.loja),
-    y: total.map(t => t.total),
-    type: "bar",
-    name: "Ranking 2024"
-  };
-
-  Plotly.newPlot("grafico3", [traceRanking], {
-    title: "Ranking de Perdas por Loja – 2024"
-  });
-}
-
-gerarGraficos();
-
-/********************************************
- * 5) EXPORTAR GRÁFICOS EM PNG
- ********************************************/
-function baixarGrafico(id, nome) {
-  Plotly.downloadImage(document.getElementById(id), {
-    format: "png",
-    filename: nome
-  });
-}
+</body>
+</html>
