@@ -3,19 +3,36 @@ async function carregarDados(){
     return resposta.json();
 }
 
-function agruparPorLoja(dados){
+/* KPI */
 
-    const lojas = {};
+function calcularKPI(dados){
 
-    dados.forEach(item=>{
-        if(!lojas[item.Loja]){
-            lojas[item.Loja]=[];
-        }
-        lojas[item.Loja].push(item);
-    });
+    const total = dados.reduce((a,b)=>a+(Number(b.Perdas)||0),0);
+    const media = total / dados.length;
 
-    return lojas;
+    document.getElementById("kpi-total").innerText =
+        "R$ "+total.toFixed(2);
+
+    document.getElementById("kpi-media").innerText =
+        "R$ "+media.toFixed(2);
+
+    /* alerta simples */
+
+    const alerta = document.getElementById("kpi-alerta");
+
+    if(media > 400){
+        alerta.innerHTML = "🔴 Risco Alto";
+        alerta.className="alerta";
+    }
+    else if(media > 200){
+        alerta.innerHTML = "🟡 Risco Médio";
+    }
+    else{
+        alerta.innerHTML = "🟢 Controlado";
+    }
 }
+
+/* Ranking */
 
 function classificarRisco(valor){
     if(valor > 4000) return "risco-alto";
@@ -23,9 +40,11 @@ function classificarRisco(valor){
     return "risco-baixo";
 }
 
-function calcularRanking(dados){
+function renderRanking(dados){
 
-    const totalPorLoja = {};
+    const container=document.getElementById("ranking");
+
+    const totalPorLoja={};
 
     dados.forEach(item=>{
         if(!totalPorLoja[item.Loja]){
@@ -34,184 +53,106 @@ function calcularRanking(dados){
         totalPorLoja[item.Loja]+=Number(item.Perdas)||0;
     });
 
-    const ranking = Object.keys(totalPorLoja).map(loja=>({
-        loja,
-        total: totalPorLoja[loja]
-    }));
+    const ranking=Object.entries(totalPorLoja)
+        .map(([loja,total])=>({loja,total}))
+        .sort((a,b)=>b.total-a.total);
 
-    return ranking.sort((a,b)=>b.total-a.total);
-}
-
-function renderRanking(ranking){
-
-    const container = document.getElementById("ranking");
     container.innerHTML="";
 
     ranking.forEach((item,index)=>{
 
         const div=document.createElement("div");
 
-        div.className=`ranking-item ${classificarRisco(item.total)}`;
+        div.className=
+            `ranking-item ${classificarRisco(item.total)}`;
 
         div.innerHTML=`
-            <span>🥇 ${index+1} - ${item.loja}</span>
-            <span>R$ ${item.total.toFixed(2)}</span>
+        <span>🥇 ${index+1} - ${item.loja}</span>
+        <span>R$ ${item.total.toFixed(2)}</span>
         `;
 
         container.appendChild(div);
     });
 }
 
-function abrirModal(titulo, dados){
+/* Previsão simples (Regressão Linear) */
 
-    document.getElementById("modal-titulo").textContent=titulo;
-    document.getElementById("modal-json").textContent=
-        JSON.stringify(dados,null,2);
+function preverTendencia(valores){
 
-    document.getElementById("modal-dados").classList.add("open");
-}
+    let xSum=0,ySum=0,xy=0,x2=0,n=valores.length;
 
-document.getElementById("btn-fechar").onclick=()=>{
-    document.getElementById("modal-dados").classList.remove("open");
-}
-
-function criarGrafico(idCanvas,titulo,labels,datasets){
-
-    const canvas=document.getElementById(idCanvas);
-
-    const antigo=Chart.getChart(canvas);
-    if(antigo) antigo.destroy();
-
-    new Chart(canvas,{
-        type:"line",
-        data:{ labels,datasets },
-        options:{
-            responsive:true,
-            plugins:{
-                title:{display:true,text:titulo}
-            },
-            onClick:(evt,elements)=>{
-                if(elements.length){
-                    const index=elements[0].index;
-                    abrirModal(titulo,{
-                        mes:labels[index],
-                        dados:datasets
-                    });
-                }
-            }
-        }
+    valores.forEach((y,x)=>{
+        xSum+=x;
+        ySum+=y;
+        xy+=x*y;
+        x2+=x*x;
     });
+
+    const slope =
+        (n*xy - xSum*ySum) /
+        (n*x2 - xSum*xSum);
+
+    const intercept =
+        (ySum - slope*xSum)/n;
+
+    return valores.map((_,x)=> slope*x + intercept);
 }
 
-function prepararSeries(dadosLoja){
+/* Gráfico */
 
-    const mesesOrd=[
-        "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
-        "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
+function criarGraficoTendencia(dados){
+
+    const meses=[
+        "Jan","Fev","Mar","Abr","Mai","Jun",
+        "Jul","Ago","Set","Out","Nov","Dez"
     ];
 
-    const anos=[...new Set(dadosLoja.map(d=>d.Ano))].sort((a,b)=>a-b);
+    const valores=new Array(12).fill(0);
 
-    const datasets=anos.map(ano=>{
-
-        const valores=new Array(12).fill(0);
-
-        mesesOrd.forEach((mes,index)=>{
-
-            const reg=dadosLoja.find(
-                i=>i.Ano===ano && i["Mês"]===mes
-            );
-
-            valores[index]=reg?Number(reg.Perdas):0;
-        });
-
-        return{
-            label:ano,
-            data:valores,
-            borderWidth:2,
-            tension:.35,
-            fill:false
-        };
+    dados.forEach(item=>{
+        const mesIndex=parseInt(item.MêsNumero||0);
+        if(mesIndex>=0){
+            valores[mesIndex]+=Number(item.Perdas)||0;
+        }
     });
 
-    return {mesesOrd,datasets};
+    const tendencia=preverTendencia(valores);
+
+    new Chart(
+        document.getElementById("graficoTendencia"),
+        {
+            type:"line",
+            data:{
+                labels:meses,
+                datasets:[
+                    {
+                        label:"Perdas",
+                        data:valores,
+                        borderWidth:2,
+                        tension:.3
+                    },
+                    {
+                        label:"Tendência",
+                        data:tendencia,
+                        borderWidth:2,
+                        borderDash:[5,5]
+                    }
+                ]
+            }
+        }
+    );
 }
 
-async function montarGraficos(){
+/* Inicialização */
+
+async function iniciar(){
 
     const dados=await carregarDados();
 
-    const lojas=agruparPorLoja(dados);
+    calcularKPI(dados);
+    renderRanking(dados);
+    criarGraficoTendencia(dados);
 
-    /* GRAFICO GERAL */
-
-    const mesesOrd=[
-        "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
-        "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
-    ];
-
-    const anosGlobais=[...new Set(dados.map(d=>d.Ano))].sort();
-
-    const datasetsGerais=anosGlobais.map(ano=>{
-
-        const valores=new Array(12).fill(0);
-
-        dados.forEach(item=>{
-            if(item.Ano===ano){
-                const idx=mesesOrd.indexOf(item["Mês"]);
-                if(idx>=0){
-                    valores[idx]+=Number(item.Perdas)||0;
-                }
-            }
-        });
-
-        return{
-            label:ano,
-            data:valores,
-            borderWidth:2,
-            tension:.35,
-            fill:false
-        };
-    });
-
-    criarGrafico(
-        "graficoGeral",
-        "Comparativo Geral de Perdas",
-        mesesOrd,
-        datasetsGerais
-    );
-
-    /* RANKING */
-
-    const ranking=calcularRanking(dados);
-    renderRanking(ranking);
-
-    /* GRAFICOS POR LOJA */
-
-    const container=document.getElementById("graficos-lojas");
-    container.innerHTML="";
-
-    Object.keys(lojas).forEach(lojaNome=>{
-
-        const lojaDados=lojas[lojaNome];
-
-        const {mesesOrd,datasets}=prepararSeries(lojaDados);
-
-        const div=document.createElement("div");
-        div.className="grafico-container";
-
-        const idCanvas="grafico-"+lojaNome.replace(/[^a-zA-Z0-9]/g,"");
-
-        div.innerHTML=`
-            <h2>${lojaNome}</h2>
-            <canvas id="${idCanvas}"></canvas>
-        `;
-
-        container.appendChild(div);
-
-        criarGrafico(idCanvas,lojaNome,mesesOrd,datasets);
-
-    });
 }
 
-montarGraficos();
+iniciar();

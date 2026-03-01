@@ -2,20 +2,36 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Dashboard Perdas - Prevenção</title>
+<title>Inteligência de Perdas</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 
 body{
-    font-family: Arial;
-    margin: 2rem;
-    background: linear-gradient(135deg,#f5f7fa,#e4e8f0);
+    font-family:Arial;
+    margin:2rem;
+    background:#f4f6fb;
 }
 
-h1{
-    color:#0b3d91;
+.kpi-container{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1rem;
+    margin-bottom:2rem;
+}
+
+.kpi{
+    background:white;
+    padding:1rem;
+    border-radius:10px;
+    text-align:center;
+    font-weight:bold;
+    box-shadow:0 3px 10px rgba(0,0,0,.08);
+}
+
+.alerta{
+    color:#c20000;
 }
 
 .grafico-container{
@@ -23,99 +39,42 @@ h1{
     padding:1rem;
     border-radius:10px;
     margin-bottom:2rem;
-    box-shadow:0 4px 12px rgba(0,0,0,.08);
-}
-
-canvas{
-    width:100%!important;
 }
 
 .ranking-item{
     display:flex;
     justify-content:space-between;
-    padding:10px;
-    margin:6px 0;
+    padding:8px;
     border-radius:6px;
-    font-weight:bold;
+    margin:5px 0;
 }
 
-.risco-alto{
-    background:#ffdddd;
-    color:#a80000;
-}
-
-.risco-medio{
-    background:#fff3cd;
-    color:#856404;
-}
-
-.risco-baixo{
-    background:#ddffdd;
-    color:#1e7e34;
-}
-
-/* Modal */
-
-.modal{
-    position:fixed;
-    inset:0;
-    display:none;
-    align-items:center;
-    justify-content:center;
-    background:rgba(0,0,0,.4);
-    z-index:9999;
-}
-
-.modal.open{
-    display:flex;
-}
-
-.modal-box{
-    background:white;
-    width:90%;
-    max-width:800px;
-    padding:1rem;
-    border-radius:10px;
-}
-
-.btn-close{
-    padding:.5rem 1rem;
-    border:none;
-    background:#777;
-    color:white;
-    border-radius:6px;
-    cursor:pointer;
-}
+.risco-alto{ background:#ffdddd;color:#a80000; }
+.risco-medio{ background:#fff3cd;color:#856404; }
+.risco-baixo{ background:#ddffdd;color:#1e7e34; }
 
 </style>
+
 </head>
 
 <body>
 
-<h1>📊 Dashboard Prevenção de Perdas</h1>
+<h1>🧠 Inteligência de Prevenção de Perdas</h1>
 
-<div class="grafico-container">
-<h2>Geral - Todas as Lojas</h2>
-<canvas id="graficoGeral"></canvas>
+<div class="kpi-container">
+<div class="kpi">Total Perdas<br><span id="kpi-total"></span></div>
+<div class="kpi">Média Mensal<br><span id="kpi-media"></span></div>
+<div class="kpi">Status<br><span id="kpi-alerta"></span></div>
 </div>
 
 <div class="grafico-container">
-<h2>🏆 Ranking de Lojas</h2>
+<h2>📈 Tendência de Perdas</h2>
+<canvas id="graficoTendencia"></canvas>
+</div>
+
+<div class="grafico-container">
+<h2>🏆 Ranking Mensal</h2>
 <div id="ranking"></div>
-</div>
-
-<div id="graficos-lojas"></div>
-
-<!-- Modal -->
-
-<div id="modal-dados" class="modal">
-<div class="modal-box">
-<h3 id="modal-titulo"></h3>
-<pre id="modal-json"></pre>
-<div style="text-align:right;margin-top:10px">
-<button id="btn-fechar" class="btn-close">Fechar</button>
-</div>
-</div>
 </div>
 
 <script src="script.js"></script>
