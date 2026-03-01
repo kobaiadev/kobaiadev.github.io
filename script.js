@@ -2,23 +2,116 @@ let chartLoja=null;
 let chartComparativo=null;
 
 /* =============================
-CARREGAR JSON
+CARREGAR DADOS
 ============================= */
 
 async function carregarDados(){
 
 try{
-
 const res=await fetch("./perdas.json");
-
-if(!res.ok) throw new Error("Erro ao carregar JSON");
-
 return await res.json();
-
 }catch(e){
 console.error(e);
 return [];
 }
+
+}
+
+/* =============================
+MAPA DE MESES
+============================= */
+
+const meses=[
+"Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+"Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
+];
+
+/* =============================
+ANALISE LOJA
+============================= */
+
+function analisarLoja(dadosLoja){
+
+/* ========= HISTÓRICO POR ANO ========= */
+
+const anos={};
+
+dadosLoja.forEach(d=>{
+
+if(!anos[d.Ano]){
+anos[d.Ano]=new Array(12).fill(0);
+}
+
+const mesIndex=meses.indexOf(d.Mês);
+
+if(mesIndex>=0){
+anos[d.Ano][mesIndex]+=Number(d.Perdas)||0;
+}
+
+});
+
+/* ========= GRAFICO COMPARATIVO ANUAL ========= */
+
+const datasets=[];
+
+Object.keys(anos).sort().forEach(ano=>{
+
+datasets.push({
+label:"Ano "+ano,
+data:anos[ano],
+borderWidth:2,
+tension:.35
+});
+
+});
+
+/* Destroy anterior */
+if(chartComparativo) chartComparativo.destroy();
+
+chartComparativo=new Chart(
+document.getElementById("graficoComparativo"),
+{
+type:"line",
+data:{
+labels:meses,
+datasets:datasets
+}
+}
+);
+
+/* ========= PREVISÃO IA (SERIE CONTÍNUA) ========= */
+
+const serieCompleta=[];
+
+Object.keys(anos).sort().forEach(ano=>{
+serieCompleta.push(...anos[ano]);
+});
+
+const tendencia=regressaoLinear(serieCompleta)
+.map((_,i)=>regressaoLinear(serieCompleta).predict(i));
+
+if(chartLoja) chartLoja.destroy();
+
+chartLoja=new Chart(
+document.getElementById("graficoLoja"),
+{
+type:"line",
+data:{
+labels:Array(serieCompleta.length).fill("").map((_,i)=>i+1),
+datasets:[
+{
+label:"Histórico",
+data:serieCompleta
+},
+{
+label:"Previsão",
+data:tendencia,
+borderDash:[6,6]
+}
+]
+}
+}
+);
 
 }
 
@@ -47,121 +140,6 @@ predict:(x)=>slope*x+intercept
 }
 
 /* =============================
-ANALISE LOJA ⭐ CORRIGIDO
-============================= */
-
-function analisarLoja(dadosLoja){
-
-const meses=[
-"Jan","Fev","Mar","Abr","Mai","Jun",
-"Jul","Ago","Set","Out","Nov","Dez"
-];
-
-const mapa={
-janeiro:0,fevereiro:1,março:2,abril:3,
-maio:4,junho:5,julho:6,agosto:7,
-setembro:8,outubro:9,novembro:10,dezembro:11
-};
-
-/* =============================
-AGRUPAR POR ANO (CORRETO AGORA ⭐)
-============================= */
-
-const anos={};
-
-dadosLoja.forEach(d=>{
-
-if(!anos[d.Ano]){
-anos[d.Ano]=new Array(12).fill(0);
-}
-
-const mesIndex=mapa[d.Mês.toLowerCase()];
-
-if(mesIndex!==undefined){
-anos[d.Ano][mesIndex]+=Number(d.Perdas)||0;
-}
-
-});
-
-/* =============================
-PREPARAR DATASETS
-============================= */
-
-const datasets=[];
-
-Object.keys(anos).sort().forEach(ano=>{
-datasets.push({
-label:"Ano "+ano,
-data:anos[ano],
-borderWidth:2,
-tension:.35
-});
-});
-
-/* =============================
-PREVISÃO IA (BASE GLOBAL)
-============================= */
-
-const todosValores=[];
-
-Object.values(anos).forEach(arr=>{
-todosValores.push(...arr);
-});
-
-const modelo=regressaoLinear(todosValores);
-const tendencia=todosValores.map((_,i)=>modelo.predict(i));
-
-/* =============================
-DESTROY GRAFICOS
-============================= */
-
-if(chartLoja) chartLoja.destroy();
-if(chartComparativo) chartComparativo.destroy();
-
-/* =============================
-GRAFICO HISTÓRICO + PREVISÃO
-============================= */
-
-chartLoja=new Chart(
-document.getElementById("graficoLoja"),
-{
-type:"line",
-data:{
-labels:meses,
-datasets:[
-{
-label:"Histórico",
-data:todosValores.slice(0,12),
-borderWidth:2
-},
-{
-label:"Previsão IA",
-data:tendencia.slice(0,12),
-borderDash:[6,6]
-}
-]
-}
-}
-);
-
-/* =============================
-COMPARATIVO ANUAL REAL ⭐
-============================= */
-
-chartComparativo=new Chart(
-document.getElementById("graficoComparativo"),
-{
-type:"line",
-data:{
-labels:meses,
-datasets:datasets
-}
-}
-);
-
-}
-
-/* =============================
 KPI
 ============================= */
 
@@ -172,11 +150,11 @@ const valores=dados.map(d=>Number(d.Perdas)||0);
 const total=valores.reduce((a,b)=>a+b,0);
 const media=total/(valores.length||1);
 
-const kpiTotal=document.getElementById("kpi-total");
-const kpiMedia=document.getElementById("kpi-media");
+document.getElementById("kpi-total").innerText=
+"R$ "+total.toFixed(2);
 
-if(kpiTotal) kpiTotal.innerText="R$ "+total.toFixed(2);
-if(kpiMedia) kpiMedia.innerText="R$ "+media.toFixed(2);
+document.getElementById("kpi-media").innerText=
+"R$ "+media.toFixed(2);
 
 }
 
@@ -207,7 +185,7 @@ if(!seletor) return;
 
 seletor.innerHTML=
 Object.keys(lojas)
-.map(l=>`<option>${l}</option>`)
+.map(l=>`<option value="${l}">${l}</option>`)
 .join("");
 
 seletor.onchange=()=>{
@@ -217,6 +195,7 @@ analisarLoja(lojas[seletor.value]);
 const primeira=Object.keys(lojas)[0];
 
 if(primeira){
+seletor.value=primeira;
 analisarLoja(lojas[primeira]);
 }
 
