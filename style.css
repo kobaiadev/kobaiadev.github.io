@@ -1,4 +1,8 @@
-/* Reset e Base */
+
+/* =============================
+RESET E BASE
+============================= */
+
 *{
   box-sizing:border-box;
 }
@@ -7,7 +11,19 @@ html{
   scroll-behavior:smooth;
 }
 
-body {
+/* =============================
+THEME AUTOMÁTICO
+============================= */
+
+:root{
+  color-scheme: light dark;
+}
+
+/* =============================
+BODY
+============================= */
+
+body{
   font-family:
     -apple-system,
     BlinkMacSystemFont,
@@ -23,73 +39,118 @@ body {
   padding:2rem;
 
   color:#222;
+
+  line-height:1.6;
 }
 
-/* Títulos */
+/* =============================
+TÍTULO
+============================= */
 
-h1 {
+h1{
   color:#0b3d91;
   font-weight:600;
-  margin-bottom:1.5rem;
+  margin-bottom:1.8rem;
 }
 
-/* Card de notícia */
+/* =============================
+CARD NOTÍCIA PREMIUM
+============================= */
 
-.noticia {
+.noticia{
   background:white;
 
-  padding:1.5rem;
-  margin-bottom:1.2rem;
+  padding:1.6rem;
+  margin-bottom:1.3rem;
 
-  border-radius:14px;
-  border:1px solid rgba(0,0,0,.05);
+  border-radius:16px;
 
-  box-shadow:
-    0 2px 6px rgba(0,0,0,.04),
-    0 10px 30px rgba(0,0,0,.06);
-
-  transition:.25s ease;
-}
-
-/* Efeito hover moderno */
-
-.noticia:hover {
-  transform:translateY(-4px);
+  border:1px solid rgba(0,0,0,.04);
 
   box-shadow:
-    0 6px 18px rgba(0,0,0,.1),
-    0 14px 40px rgba(0,0,0,.12);
+    0 4px 10px rgba(0,0,0,.04),
+    0 12px 35px rgba(0,0,0,.06);
+
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease,
+    background .25s ease;
 }
 
-/* Links */
+/* Hover moderno */
 
-.noticia a {
+.noticia:hover{
+  transform:translateY(-5px);
+
+  box-shadow:
+    0 10px 25px rgba(0,0,0,.1),
+    0 20px 50px rgba(0,0,0,.12);
+}
+
+/* =============================
+LINKS
+============================= */
+
+.noticia a{
   color:#0b3d91;
   text-decoration:none;
   font-weight:600;
-  transition:color .2s ease;
+
+  transition:.2s ease;
 }
 
-.noticia a:hover {
+.noticia a:hover{
   color:#0044aa;
   text-decoration:underline;
 }
 
-/* Texto */
+/* =============================
+TEXTO
+============================= */
 
-.noticia p {
-  line-height:1.6;
+.noticia p{
+  line-height:1.7;
   color:#444;
 }
 
-/* Acessibilidade */
+/* =============================
+ACESSIBILIDADE
+============================= */
 
 .noticia a:focus{
   outline:2px solid #0b3d91;
-  outline-offset:3px;
+  outline-offset:4px;
 }
 
-/* Responsividade */
+/* =============================
+DARK MODE AUTOMÁTICO
+============================= */
+
+@media (prefers-color-scheme: dark){
+
+  body{
+    background:linear-gradient(135deg,#0f172a,#020617);
+    color:#e5e7eb;
+  }
+
+  .noticia{
+    background:#1e293b;
+    border:1px solid rgba(255,255,255,.05);
+  }
+
+  .noticia p{
+    color:#cbd5f5;
+  }
+
+  .noticia a{
+    color:#38bdf8;
+  }
+
+}
+
+/* =============================
+RESPONSIVO AVANÇADO
+============================= */
 
 @media (max-width:768px){
 
@@ -103,11 +164,27 @@ h1 {
   }
 
   .noticia{
-    padding:1rem;
+    padding:1.1rem;
   }
 
   .noticia p{
     font-size:.95rem;
+  }
+
+}
+
+/* =============================
+MOBILE MUITO PEQUENO
+============================= */
+
+@media (max-width:480px){
+
+  body{
+    padding:.8rem;
+  }
+
+  h1{
+    font-size:1.4rem;
   }
 
 }
