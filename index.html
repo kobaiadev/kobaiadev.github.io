@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Elite - Inteligência de Perdas</title>
+<title>Dashboard Inteligência de Perdas</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -10,15 +10,21 @@
 
 body{
     font-family:Arial;
-    background:linear-gradient(135deg,#f4f6fb,#dde4f5);
     margin:2rem;
+    background:linear-gradient(135deg,#f5f7fa,#e4e8f0);
 }
 
 h1{
     color:#0b3d91;
 }
 
-/* KPI */
+.grafico-container{
+    background:white;
+    padding:1rem;
+    border-radius:12px;
+    margin-bottom:2rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
 
 .kpi-container{
     display:grid;
@@ -29,55 +35,27 @@ h1{
 
 .kpi{
     background:white;
-    padding:1.2rem;
-    border-radius:12px;
+    padding:1rem;
+    border-radius:10px;
     text-align:center;
     font-weight:bold;
-    box-shadow:0 5px 15px rgba(0,0,0,.08);
-}
-
-/* Alertas */
-
-.alerta-critico{
-    animation:pulse 1.2s infinite;
-    color:#c20000;
-}
-
-@keyframes pulse{
-    0%{opacity:1;}
-    50%{opacity:.5;}
-    100%{opacity:1;}
-}
-
-.grafico-container{
-    background:white;
-    padding:1rem;
-    border-radius:12px;
-    margin-bottom:2rem;
-    box-shadow:0 5px 15px rgba(0,0,0,.08);
 }
 
 .ranking-item{
     display:flex;
     justify-content:space-between;
     padding:8px;
-    margin:5px 0;
     border-radius:6px;
+    margin:5px 0;
 }
 
-.risco-alto{
-    background:#ffdddd;
-    color:#a80000;
-}
+.risco-alto{ background:#ffdddd;color:#a80000; }
+.risco-medio{ background:#fff3cd;color:#856404; }
+.risco-baixo{ background:#ddffdd;color:#1e7e34; }
 
-.risco-medio{
-    background:#fff3cd;
-    color:#856404;
-}
-
-.risco-baixo{
-    background:#ddffdd;
-    color:#1e7e34;
+.alerta-critico{
+    color:#c20000;
+    font-weight:bold;
 }
 
 </style>
@@ -86,27 +64,33 @@ h1{
 
 <body>
 
-<h1>🧠 Inteligência Elite de Prevenção de Perdas</h1>
+<h1>🧠 Dashboard Inteligência de Perdas</h1>
 
 <div class="kpi-container">
-<div class="kpi">Total Perdas<br><span id="kpi-total"></span></div>
-<div class="kpi">Média Mensal<br><span id="kpi-media"></span></div>
+<div class="kpi">Total<br><span id="kpi-total"></span></div>
+<div class="kpi">Média<br><span id="kpi-media"></span></div>
 <div class="kpi">Status<br><span id="kpi-status"></span></div>
 </div>
 
 <div class="grafico-container">
-<h2>📈 Predição + Histórico</h2>
+<h2>📈 Predição Geral</h2>
 <canvas id="graficoPredicao"></canvas>
 </div>
 
 <div class="grafico-container">
-<h2>⚠ Alertas Anômalos</h2>
-<div id="alertas"></div>
+<h2>🏆 Ranking</h2>
+<div id="ranking"></div>
 </div>
 
 <div class="grafico-container">
-<h2>🏆 Ranking Estratégico</h2>
-<div id="ranking"></div>
+<h2>📍 Análise Individual</h2>
+
+<select id="seletorLoja"></select>
+
+<canvas id="graficoLoja"></canvas>
+
+<div id="alertasLoja"></div>
+
 </div>
 
 <script src="script.js"></script>
