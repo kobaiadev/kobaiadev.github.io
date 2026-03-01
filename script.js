@@ -1,6 +1,6 @@
 
 /* =============================
-UTILS IA
+IA UTILS
 ============================= */
 
 function regressaoLinear(valores){
@@ -42,6 +42,7 @@ async function carregarDados(){
         console.error(e);
         return [];
     }
+
 }
 
 /* =============================
@@ -60,7 +61,7 @@ function calcularKPI(dados){
         /(valores.length||1)
     );
 
-    const score=Math.abs(desvio/media)*100;
+    const score=Math.abs(desvio/(media||1))*100;
 
     document.getElementById("kpi-total")
     .innerText="R$ "+total.toFixed(2);
@@ -74,7 +75,7 @@ function calcularKPI(dados){
 }
 
 /* =============================
-RANKING INTELIGENTE
+RANKING
 ============================= */
 
 function renderRanking(dados){
@@ -100,9 +101,10 @@ function renderRanking(dados){
 
         div.className="ranking-item";
 
-        div.innerHTML=
-        `🥇 ${i+1} | ${item.loja}
-        <span>R$ ${item.total.toFixed(2)}</span>`;
+        div.innerHTML=`
+        🥇 ${i+1} | ${item.loja}
+        <span>R$ ${item.total.toFixed(2)}</span>
+        `;
 
         container.appendChild(div);
 
@@ -111,15 +113,48 @@ function renderRanking(dados){
 }
 
 /* =============================
-ANOMALIA CORPORATIVA
+ANOMALIA
 ============================= */
 
-function detectarAnomalias(valores,media,desvio){
+function detectarAnomalias(dados){
 
-    const zScore=(v)=>
-    desvio===0?0:(v-media)/desvio;
+    const alertas=document.getElementById("alertas");
 
-    return valores.map(v=>Math.abs(zScore(v))>2.5);
+    const valores=dados.map(d=>Number(d.Perdas)||0);
+
+    const media=
+    valores.reduce((a,b)=>a+b,0)/(valores.length||1);
+
+    const desvio=Math.sqrt(
+        valores.reduce((a,b)=>a+Math.pow(b-media,2),0)
+        /(valores.length||1)
+    );
+
+    alertas.innerHTML="";
+
+    dados.forEach(item=>{
+
+        const z=
+        desvio===0?0:
+        (item.Perdas-media)/desvio;
+
+        if(Math.abs(z)>2.5){
+
+            const div=document.createElement("div");
+
+            div.className="alerta";
+
+            div.innerHTML=`
+            🚨 Anomalia detectada:
+            ${item.Loja} | ${item.Mês}
+            R$ ${Number(item.Perdas).toFixed(2)}
+            `;
+
+            alertas.appendChild(div);
+        }
+
+    });
+
 }
 
 /* =============================
@@ -136,9 +171,10 @@ function analisarLoja(nome,dadosLoja){
     ];
 
     const mapa={
-        janeiro:0,fevereiro:1,março:2,abril:3,
-        maio:4,junho:5,julho:6,agosto:7,
-        setembro:8,outubro:9,novembro:10,dezembro:11
+        janeiro:0,fevereiro:1,março:2,
+        abril:3,maio:4,junho:5,
+        julho:6,agosto:7,setembro:8,
+        outubro:9,novembro:10,dezembro:11
     };
 
     const valores=new Array(12).fill(0);
@@ -173,6 +209,8 @@ function analisarLoja(nome,dadosLoja){
             }
         }
     );
+
+    detectarAnomalias(dadosLoja);
 
 }
 
