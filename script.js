@@ -1,138 +1,134 @@
 async function carregarDados() {
     const resposta = await fetch("perdas.json");
-    const dados = await resposta.json();
-    return dados;
-}
-
-function agruparPorAno(dados) {
-    const anos = {};
-
-    dados.forEach(item => {
-        const ano = String(item.ano); // garante string
-        const valor = Number(item.valor) || 0;
-
-        if (!anos[ano]) {
-            anos[ano] = 0;
-        }
-
-        anos[ano] += valor;
-    });
-
-    return anos;
+    return resposta.json();
 }
 
 function agruparPorLoja(dados) {
     const lojas = {};
 
     dados.forEach(item => {
-        const loja = String(item.loja);
-        const valor = Number(item.valor) || 0;
-
-        if (!lojas[loja]) {
-            lojas[loja] = 0;
+        if (!lojas[item.Loja]) {
+            lojas[item.Loja] = [];
         }
-
-        lojas[loja] += valor;
+        lojas[item.Loja].push(item);
     });
 
     return lojas;
 }
 
-function agruparAnoPorLoja(dados) {
-    const resultado = {};
-
-    dados.forEach(item => {
-        const ano = String(item.ano);
-        const loja = String(item.loja);
-        const valor = Number(item.valor) || 0;
-
-        if (!resultado[ano]) {
-            resultado[ano] = {};
-        }
-
-        if (!resultado[ano][loja]) {
-            resultado[ano][loja] = 0;
-        }
-
-        resultado[ano][loja] += valor;
-    });
-
-    return resultado;
-}
-
-function gerarGraficoAnual(dados) {
-    const anosAgrupados = agruparPorAno(dados);
-
-    const labels = Object.keys(anosAgrupados).sort();
-    const valores = labels.map(ano => anosAgrupados[ano]);
-
-    new Chart(document.getElementById("graficoAnual"), {
-        type: "bar",
+function criarGrafico(idCanvas, titulo, labels, datasets) {
+    new Chart(document.getElementById(idCanvas), {
+        type: "line",
         data: {
-            labels: labels,
-            datasets: [{
-                label: "Perdas por Ano",
-                data: valores,
-                borderWidth: 1
-            }]
+            labels,
+            datasets
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: { display: true, text: titulo }
+            }
         }
     });
 }
 
-function gerarGraficoPorLoja(dados) {
-    const lojasAgrupadas = agruparPorLoja(dados);
+function prepararSeries(dadosLoja) {
 
-    const labels = Object.keys(lojasAgrupadas).sort((a,b) => Number(a)-Number(b));
-    const valores = labels.map(loja => lojasAgrupadas[loja]);
+    const mesesOrd = [
+        "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+        "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
+    ];
 
-    new Chart(document.getElementById("graficoLoja"), {
-        type: "bar",
-        data: {
-            labels: labels,
-            datasets: [{
-                label: "Perdas por Loja",
-                data: valores,
-                borderWidth: 1
-            }]
-        }
-    });
-}
-
-function gerarGraficoComparativo(dados) {
-    const dadosAnoLoja = agruparAnoPorLoja(dados);
-
-    const anos = Object.keys(dadosAnoLoja).sort();
-    
-    // pega todas as lojas existentes
-    const todasLojas = new Set();
-    anos.forEach(ano => {
-        Object.keys(dadosAnoLoja[ano]).forEach(loja => {
-            todasLojas.add(loja);
-        });
-    });
-
-    const lojas = Array.from(todasLojas).sort((a,b) => Number(a)-Number(b));
+    // Descobre anos existentes automaticamente
+    const anos = [...new Set(dadosLoja.map(d => d.Ano))].sort((a,b)=>a-b);
 
     const datasets = anos.map(ano => {
+
+        const valores = new Array(12).fill(null);
+
+        dadosLoja.forEach(item => {
+            const idx = mesesOrd.indexOf(item["Mês"]);
+            if (idx >= 0 && item.Ano === ano) {
+                valores[idx] = Number(item.Perdas) || 0;
+            }
+        });
+
         return {
             label: ano,
-            data: lojas.map(loja => dadosAnoLoja[ano][loja] || 0),
-            fill: false,
-            tension: 0.1
+            data: valores,
+            borderWidth: 2,
+            tension: 0.3,
+            fill: false
         };
     });
 
-    new Chart(document.getElementById("graficoComparativo"), {
-        type: "line",
-        data: {
-            labels: lojas,
-            datasets: datasets
-        }
+    return { mesesOrd, datasets };
+}
+
+async function montarGraficos() {
+    const dados = await carregarDados();
+    const lojas = agruparPorLoja(dados);
+
+    // --- GRÁFICO GERAL ---
+    const mesesOrd = [
+        "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+        "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
+    ];
+
+    const anosGlobais = [...new Set(dados.map(d => d.Ano))].sort((a,b)=>a-b);
+
+    const datasetsGerais = anosGlobais.map(ano => {
+
+        const valores = new Array(12).fill(0);
+
+        dados.forEach(item => {
+            if (item.Ano === ano) {
+                const idx = mesesOrd.indexOf(item["Mês"]);
+                if (idx >= 0) {
+                    valores[idx] += Number(item.Perdas) || 0;
+                }
+            }
+        });
+
+        return {
+            label: ano,
+            data: valores,
+            borderWidth: 2,
+            tension: 0.3,
+            fill: false
+        };
+    });
+
+    criarGrafico(
+        "graficoGeral",
+        "Comparativo Geral de Perdas",
+        mesesOrd,
+        datasetsGerais
+    );
+
+    // --- GRÁFICOS POR LOJA ---
+    const container = document.getElementById("graficos-lojas");
+    container.innerHTML = "";
+
+    Object.keys(lojas).forEach(lojaNome => {
+
+        const lojaDados = lojas[lojaNome];
+        const { mesesOrd, datasets } = prepararSeries(lojaDados);
+
+        const div = document.createElement("div");
+        div.className = "grafico-container";
+
+        const idCanvas = `grafico-${lojaNome.replace(/\s/g, "")}`;
+
+        div.innerHTML = `
+            <h2>${lojaNome}</h2>
+            <canvas id="${idCanvas}"></canvas>
+        `;
+
+        container.appendChild(div);
+
+        criarGrafico(idCanvas, lojaNome, mesesOrd, datasets);
     });
 }
 
-carregarDados().then(dados => {
-    gerarGraficoAnual(dados);
-    gerarGraficoPorLoja(dados);
-    gerarGraficoComparativo(dados);
-});
+montarGraficos();
