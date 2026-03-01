@@ -4,44 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Master Control Tower Loss Intelligence</title>
+<title>Enterprise Control Tower</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <link rel="stylesheet" href="style.css">
 
 </head>
 
 <body>
 
-<h1>🧠 Master Control Tower</h1>
+<h1>🧠 Control Tower - Inteligência de Perdas</h1>
 
 <div class="kpi-container">
-
-<div class="kpi">
-Total Perdas<br>
-<span id="kpi-total"></span>
-</div>
-
-<div class="kpi">
-Média Perdas<br>
-<span id="kpi-media"></span>
-</div>
-
-<div class="kpi">
-Score Risco<br>
-<span id="kpi-score"></span>
-</div>
-
-<div class="kpi">
-Previsão Próximo Mês<br>
-<span id="kpi-previsao"></span>
-</div>
-
+<div class="kpi">Total<br><span id="kpi-total"></span></div>
+<div class="kpi">Média<br><span id="kpi-media"></span></div>
+<div class="kpi">Score Risco<br><span id="kpi-score"></span></div>
 </div>
 
 <div class="card">
-<h2>📈 Tendência Inteligente</h2>
+<h2>📈 Tendência Geral</h2>
 <canvas id="graficoGeral"></canvas>
 </div>
 
@@ -55,7 +36,11 @@ Previsão Próximo Mês<br>
 
 <select id="seletorLoja"></select>
 
+<h3>Predição + Tendência</h3>
 <canvas id="graficoLoja"></canvas>
+
+<h3>Comparativo Anual</h3>
+<canvas id="graficoComparativo"></canvas>
 
 <div id="alertas"></div>
 

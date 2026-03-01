@@ -1,247 +1,77 @@
-
-/* =============================
-RESET
-============================= */
-
 *{
-  box-sizing:border-box;
+box-sizing:border-box;
 }
-
-html{
-  scroll-behavior:smooth;
-}
-
-/* =============================
-THEME MODERNO
-============================= */
-
-:root{
-  color-scheme: light dark;
-}
-
-/* =============================
-BODY PREMIUM PORTAL
-============================= */
 
 body{
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    sans-serif;
-
-  background:
-    radial-gradient(circle at top,#f5f7fa,#e4e8f0);
-
-  max-width:1200px;
-  margin:auto;
-  padding:2rem;
-
-  color:#111;
-  line-height:1.7;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+background:linear-gradient(135deg,#020617,#0f172a);
+color:#e2e8f0;
+max-width:1300px;
+margin:auto;
+padding:2rem;
 }
-
-/* =============================
-HEADER
-============================= */
 
 h1{
-  font-weight:700;
-  color:#0b3d91;
-  margin-bottom:2rem;
+color:#38bdf8;
 }
 
-/* =============================
-GRID NOTÍCIAS PREMIUM
-============================= */
-
-.news-grid{
-  display:grid;
-  grid-template-columns:
-    repeat(auto-fit,minmax(320px,1fr));
-
-  gap:1.5rem;
+.card{
+background:rgba(255,255,255,.04);
+padding:1.5rem;
+border-radius:16px;
+margin-bottom:2rem;
+box-shadow:0 10px 40px rgba(0,0,0,.3);
 }
 
-/* =============================
-CARD PREMIUM ENTERPRISE
-============================= */
-
-.noticia{
-  background:rgba(255,255,255,.9);
-
-  backdrop-filter:blur(14px);
-
-  padding:1.6rem;
-
-  border-radius:18px;
-
-  border:1px solid rgba(0,0,0,.04);
-
-  box-shadow:
-    0 6px 20px rgba(0,0,0,.05),
-    0 20px 50px rgba(0,0,0,.06);
-
-  position:relative;
-
-  transition:
-    transform .35s cubic-bezier(.25,.8,.25,1),
-    box-shadow .35s ease,
-    background .35s ease;
+.kpi-container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:1rem;
+margin-bottom:2rem;
 }
 
-/* Hover premium */
-
-.noticia:hover{
-  transform:translateY(-8px);
-
-  box-shadow:
-    0 15px 35px rgba(0,0,0,.12),
-    0 25px 60px rgba(0,0,0,.15);
+.kpi{
+background:rgba(255,255,255,.05);
+padding:1.2rem;
+border-radius:14px;
+text-align:center;
+font-weight:bold;
+transition:.3s;
 }
 
-/* =============================
-BADGE PRIORIDADE
-============================= */
-
-.noticia .badge{
-  position:absolute;
-  top:12px;
-  right:12px;
-
-  padding:6px 12px;
-  border-radius:20px;
-
-  font-size:.75rem;
-  font-weight:600;
-
-  background:#0b3d91;
-  color:white;
+.kpi:hover{
+transform:translateY(-4px);
+background:rgba(255,255,255,.08);
 }
 
-/* =============================
-TÍTULO NOTÍCIA
-============================= */
-
-.noticia h3{
-  margin-top:0;
-  color:#0b3d91;
+#ranking{
+max-height:400px;
+overflow:auto;
 }
 
-/* =============================
-TEXTO
-============================= */
-
-.noticia p{
-  color:#444;
-  font-size:.98rem;
+.ranking-item{
+display:flex;
+justify-content:space-between;
+padding:10px;
+margin-bottom:6px;
+border-radius:8px;
 }
 
-/* =============================
-LINK PREMIUM
-============================= */
-
-.noticia a{
-  color:#0b3d91;
-  font-weight:600;
-  text-decoration:none;
-
-  display:inline-flex;
-  align-items:center;
-
-  gap:6px;
-
-  transition:.25s;
+.alerta{
+background:#991b1b;
+padding:12px;
+border-radius:10px;
+margin-top:10px;
 }
 
-.noticia a:hover{
-  color:#0044aa;
-  text-decoration:underline;
+select{
+padding:10px;
+border-radius:8px;
+border:none;
+margin-bottom:1rem;
 }
 
-/* =============================
-PRIORIDADE CRÍTICA
-============================= */
-
-.noticia.prioridade-alta{
-  border-left:6px solid #dc2626;
-}
-
-.noticia.prioridade-media{
-  border-left:6px solid #f59e0b;
-}
-
-.noticia.prioridade-baixa{
-  border-left:6px solid #16a34a;
-}
-
-/* =============================
-DARK MODE ENTERPRISE
-============================= */
-
-@media (prefers-color-scheme: dark){
-
-  body{
-    background:
-      radial-gradient(circle at top,#020617,#0f172a);
-    color:#e2e8f0;
-  }
-
-  .noticia{
-    background:rgba(30,41,59,.9);
-    border:1px solid rgba(255,255,255,.05);
-  }
-
-  .noticia p{
-    color:#cbd5f5;
-  }
-
-  .noticia h3{
-    color:#38bdf8;
-  }
-
-  .noticia a{
-    color:#38bdf8;
-  }
-
-}
-
-/* =============================
-RESPONSIVO PREMIUM
-============================= */
-
-@media(max-width:768px){
-
-  body{
-    padding:1rem;
-  }
-
-  .news-grid{
-    grid-template-columns:1fr;
-  }
-
-  h1{
-    font-size:1.6rem;
-  }
-
-}
-
-/* =============================
-ANIMAÇÃO DE ENTRADA
-============================= */
-
-.noticia{
-  animation:fadeIn .5s ease;
-}
-
-@keyframes fadeIn{
-  from{
-    opacity:0;
-    transform:translateY(20px);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
+canvas{
+width:100%!important;
+height:400px!important;
 }
