@@ -4,156 +4,129 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Dashboard Inteligência de Perdas</title>
+<title>Enterprise Intelligence Loss Prevention</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 
-/* =========================
-RESET E BASE
-========================= */
-
 *{
     box-sizing:border-box;
 }
 
-html{
-    scroll-behavior:smooth;
-}
-
 body{
     font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Arial,
-        sans-serif;
+    -apple-system,
+    BlinkMacSystemFont,
+    Segoe UI,
+    Roboto,
+    sans-serif;
 
-    background:linear-gradient(135deg,#f5f7fa,#e4e8f0);
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    color:white;
 
-    max-width:1200px;
+    max-width:1300px;
     margin:auto;
     padding:2rem;
-
-    color:#222;
 }
 
-/* =========================
-TITULOS
-========================= */
+/* HEADER */
 
 h1{
-    color:#0b3d91;
-    font-weight:600;
-    margin-bottom:1.5rem;
+    color:#38bdf8;
 }
 
-/* =========================
-KPIs
-========================= */
+/* GRID KPIs */
 
 .kpi-container{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
     gap:1rem;
     margin-bottom:2rem;
 }
 
 .kpi{
-    background:white;
-    padding:1rem;
-    border-radius:12px;
+    background:rgba(255,255,255,.05);
+    padding:1.2rem;
+    border-radius:14px;
 
     text-align:center;
     font-weight:bold;
 
+    backdrop-filter:blur(10px);
+
     transition:.3s;
-    box-shadow:0 4px 12px rgba(0,0,0,.06);
 }
 
 .kpi:hover{
-    transform:translateY(-3px);
+    transform:translateY(-4px);
+    background:rgba(255,255,255,.08);
 }
 
-/* =========================
-CARDS
-========================= */
+/* CARDS */
 
-.grafico-container{
-    background:white;
-    padding:1rem;
-    border-radius:12px;
+.card{
+    background:rgba(255,255,255,.04);
+    padding:1.5rem;
+    border-radius:16px;
     margin-bottom:2rem;
 
-    box-shadow:0 4px 12px rgba(0,0,0,.08);
+    box-shadow:0 10px 40px rgba(0,0,0,.3);
 }
 
-/* =========================
-RANKING
-========================= */
+/* RISK COLORS */
+
+.risco-alto{
+    background:#7f1d1d;
+    color:#fecaca;
+}
+
+.risco-medio{
+    background:#854d0e;
+    color:#fef3c7;
+}
+
+.risco-baixo{
+    background:#14532d;
+    color:#dcfce7;
+}
+
+/* ALERT */
+
+.alerta{
+    background:#991b1b;
+    padding:12px;
+    border-radius:10px;
+    margin-top:10px;
+}
+
+/* SELECT */
+
+select{
+    padding:10px;
+    border-radius:8px;
+    border:none;
+    margin-bottom:1rem;
+}
+
+/* RANKING */
 
 #ranking{
     max-height:400px;
-    overflow-y:auto;
+    overflow:auto;
 }
 
 .ranking-item{
     display:flex;
     justify-content:space-between;
-    padding:8px;
-    border-radius:6px;
-    margin:5px 0;
-}
-
-/* =========================
-RISCO
-========================= */
-
-.risco-alto{
-    background:#ffdddd;
-    color:#a80000;
-}
-
-.risco-medio{
-    background:#fff3cd;
-    color:#856404;
-}
-
-.risco-baixo{
-    background:#ddffdd;
-    color:#1e7e34;
-}
-
-/* =========================
-ALERTAS
-========================= */
-
-.alerta-critico{
-    background:#ffe6e6;
-    color:#c20000;
-    font-weight:bold;
     padding:10px;
     border-radius:8px;
-    margin-top:8px;
+    margin-bottom:6px;
 }
 
-/* =========================
-RESPONSIVO
-========================= */
-
-@media(max-width:768px){
-
-    body{
-        margin:1rem;
-        padding:1rem;
-    }
-
-    h1{
-        font-size:1.6rem;
-    }
-
+canvas{
+    width:100% !important;
+    height:400px !important;
 }
 
 </style>
@@ -162,33 +135,33 @@ RESPONSIVO
 
 <body>
 
-<h1>🧠 Dashboard Inteligência de Perdas</h1>
+<h1>🧠 Enterprise Loss Intelligence</h1>
 
 <div class="kpi-container">
 <div class="kpi">Total<br><span id="kpi-total"></span></div>
 <div class="kpi">Média<br><span id="kpi-media"></span></div>
-<div class="kpi">Status<br><span id="kpi-status"></span></div>
+<div class="kpi">Score Risco<br><span id="kpi-score"></span></div>
 </div>
 
-<div class="grafico-container">
-<h2>📈 Predição Geral</h2>
-<canvas id="graficoPredicao"></canvas>
+<div class="card">
+<h2>📈 Tendência Geral</h2>
+<canvas id="graficoGeral"></canvas>
 </div>
 
-<div class="grafico-container">
-<h2>🏆 Ranking</h2>
+<div class="card">
+<h2>🏆 Ranking Estratégico</h2>
 <div id="ranking"></div>
 </div>
 
-<div class="grafico-container">
+<div class="card">
 
-<h2>📍 Análise Individual</h2>
+<h2>📍 Análise por Loja</h2>
 
 <select id="seletorLoja"></select>
 
 <canvas id="graficoLoja"></canvas>
 
-<div id="alertasLoja"></div>
+<div id="alertas"></div>
 
 </div>
 

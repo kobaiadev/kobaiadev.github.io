@@ -1,3 +1,29 @@
+
+/* =============================
+UTILS IA
+============================= */
+
+function regressaoLinear(valores){
+
+    let xSum=0,ySum=0,xy=0,x2=0,n=valores.length;
+
+    valores.forEach((y,x)=>{
+        xSum+=x;
+        ySum+=y;
+        xy+=x*y;
+        x2+=x*x;
+    });
+
+    const slope=
+    (n*xy-xSum*ySum)/
+    ((n*x2-xSum*xSum)||1);
+
+    const intercept=
+    (ySum-slope*xSum)/(n||1);
+
+    return valores.map((_,x)=>slope*x+intercept);
+}
+
 /* =============================
 CARREGAR DADOS
 ============================= */
@@ -6,13 +32,11 @@ async function carregarDados(){
 
     try{
 
-        const resposta = await fetch("./perdas.json");
+        const res=await fetch("./perdas.json");
 
-        if(!resposta.ok){
-            throw new Error("Erro ao carregar JSON");
-        }
+        if(!res.ok) throw new Error("Erro JSON");
 
-        return await resposta.json();
+        return await res.json();
 
     }catch(e){
         console.error(e);
@@ -21,104 +45,64 @@ async function carregarDados(){
 }
 
 /* =============================
-KPI
+KPI ENTERPRISE
 ============================= */
 
 function calcularKPI(dados){
 
-    if(!dados.length) return;
+    const valores=dados.map(d=>Number(d.Perdas)||0);
 
-    const valores = dados.map(d=>Number(d.Perdas)||0);
+    const total=valores.reduce((a,b)=>a+b,0);
+    const media=total/(valores.length||1);
 
-    const total = valores.reduce((a,b)=>a+b,0);
+    const desvio=Math.sqrt(
+        valores.reduce((a,b)=>a+Math.pow(b-media,2),0)
+        /(valores.length||1)
+    );
 
-    const media = total/(valores.length||1);
+    const score=Math.abs(desvio/media)*100;
 
     document.getElementById("kpi-total")
-        .innerText="R$ "+total.toFixed(2);
+    .innerText="R$ "+total.toFixed(2);
 
     document.getElementById("kpi-media")
-        .innerText="R$ "+media.toFixed(2);
+    .innerText="R$ "+media.toFixed(2);
 
-    const status=document.getElementById("kpi-status");
-
-    if(media>400){
-        status.innerHTML="🔴 Risco Alto";
-    }
-    else if(media>200){
-        status.innerHTML="🟡 Risco Médio";
-    }
-    else{
-        status.innerHTML="🟢 Controlado";
-    }
+    document.getElementById("kpi-score")
+    .innerText=score.toFixed(2)+"%";
 
 }
 
 /* =============================
-PREVISÃO (Suavização Exponencial)
+RANKING INTELIGENTE
 ============================= */
-
-function suavizacaoExponencial(valores, alpha=0.3){
-
-    let resultado=[valores[0]];
-
-    for(let i=1;i<valores.length;i++){
-        resultado.push(
-            alpha*valores[i] +
-            (1-alpha)*resultado[i-1]
-        );
-    }
-
-    return resultado;
-}
-
-/* =============================
-RANKING
-============================= */
-
-function classificarRiscoPercentil(valor, lista){
-
-    const sorted=[...lista].sort((a,b)=>a-b);
-
-    const p90 = sorted[Math.floor(sorted.length*0.9)];
-    const p75 = sorted[Math.floor(sorted.length*0.75)];
-
-    if(valor>=p90) return "risco-alto";
-    if(valor>=p75) return "risco-medio";
-
-    return "risco-baixo";
-}
 
 function renderRanking(dados){
 
     const ranking={};
 
-    dados.forEach(item=>{
-        if(!ranking[item.Loja]) ranking[item.Loja]=0;
-        ranking[item.Loja]+=Number(item.Perdas)||0;
+    dados.forEach(d=>{
+        if(!ranking[d.Loja]) ranking[d.Loja]=0;
+        ranking[d.Loja]+=Number(d.Perdas)||0;
     });
 
-    const lista = Object.entries(ranking)
-        .map(([loja,total])=>({loja,total}))
-        .sort((a,b)=>b.total-a.total);
-
-    const valores = dados.map(d=>Number(d.Perdas)||0);
+    const lista=Object.entries(ranking)
+    .map(([loja,total])=>({loja,total}))
+    .sort((a,b)=>b.total-a.total);
 
     const container=document.getElementById("ranking");
 
     container.innerHTML="";
 
-    lista.forEach((item,index)=>{
+    lista.forEach((item,i)=>{
 
         const div=document.createElement("div");
 
-        div.className=
-        `ranking-item ${classificarRiscoPercentil(item.total,valores)}`;
+        div.className="ranking-item";
 
-        div.innerHTML=`
-        🥇 ${index+1} - ${item.loja}
-        <span>R$ ${item.total.toFixed(2)}</span>
-        `;
+        div.innerHTML=
+        `🥇 ${i+1} | ${item.loja}
+        <span>R$ ${item.total.toFixed(2)}</span>`;
 
         container.appendChild(div);
 
@@ -127,57 +111,22 @@ function renderRanking(dados){
 }
 
 /* =============================
-ANOMALIA
+ANOMALIA CORPORATIVA
 ============================= */
 
-function detectarAnomalias(dados){
+function detectarAnomalias(valores,media,desvio){
 
-    const alertas=document.getElementById("alertasLoja");
-    if(!alertas) return;
+    const zScore=(v)=>
+    desvio===0?0:(v-media)/desvio;
 
-    const valores=dados.map(d=>Number(d.Perdas)||0);
-
-    const media =
-        valores.reduce((a,b)=>a+b,0)/(valores.length||1);
-
-    const desvio=Math.sqrt(
-        valores.reduce((a,b)=>a+Math.pow(b-media,2),0)
-        /(valores.length||1)
-    );
-
-    alertas.innerHTML="";
-
-    dados.forEach(item=>{
-
-        const zScore =
-            desvio === 0 ? 0 :
-            (Number(item.Perdas)-media)/desvio;
-
-        if(Math.abs(zScore)>2.5){
-
-            const div=document.createElement("div");
-
-            div.className="alerta-critico";
-
-            div.innerHTML=`
-            🚨 Anomalia:
-            ${item.Loja} |
-            ${item.Mês}
-            R$ ${Number(item.Perdas).toFixed(2)}
-            `;
-
-            alertas.appendChild(div);
-        }
-
-    });
-
+    return valores.map(v=>Math.abs(zScore(v))>2.5);
 }
 
 /* =============================
-GRAFICO LOJA
+LOJA ANALISE
 ============================= */
 
-let graficoLojaAtual=null;
+let chartLoja;
 
 function analisarLoja(nome,dadosLoja){
 
@@ -186,31 +135,24 @@ function analisarLoja(nome,dadosLoja){
         "Jul","Ago","Set","Out","Nov","Dez"
     ];
 
-    const mapaMes = {
-        janeiro:0, fevereiro:1, março:2,
-        abril:3, maio:4, junho:5,
-        julho:6, agosto:7, setembro:8,
-        outubro:9, novembro:10, dezembro:11
+    const mapa={
+        janeiro:0,fevereiro:1,março:2,abril:3,
+        maio:4,junho:5,julho:6,agosto:7,
+        setembro:8,outubro:9,novembro:10,dezembro:11
     };
 
     const valores=new Array(12).fill(0);
 
-    dadosLoja.forEach(item=>{
-
-        const mesIndex =
-            mapaMes[item.Mês.toLowerCase()];
-
-        if(mesIndex>=0){
-            valores[mesIndex]+=Number(item.Perdas)||0;
-        }
-
+    dadosLoja.forEach(d=>{
+        const m=mapa[d.Mês.toLowerCase()];
+        if(m>=0) valores[m]+=Number(d.Perdas)||0;
     });
 
-    const tendencia = suavizacaoExponencial(valores);
+    const tendencia=regressaoLinear(valores);
 
-    if(graficoLojaAtual) graficoLojaAtual.destroy();
+    if(chartLoja) chartLoja.destroy();
 
-    graficoLojaAtual=new Chart(
+    chartLoja=new Chart(
         document.getElementById("graficoLoja"),
         {
             type:"line",
@@ -220,44 +162,17 @@ function analisarLoja(nome,dadosLoja){
                     {
                         label:"Histórico",
                         data:valores,
-                        borderWidth:2,
-                        tension:.35
+                        borderWidth:2
                     },
                     {
-                        label:"Tendência",
+                        label:"Previsão IA",
                         data:tendencia,
-                        borderDash:[5,5]
+                        borderDash:[6,6]
                     }
                 ]
             }
         }
     );
-
-    detectarAnomalias(dadosLoja);
-
-}
-
-/* =============================
-SELETOR
-============================= */
-
-function preencherSeletor(lojas){
-
-    const seletor=document.getElementById("seletorLoja");
-
-    seletor.innerHTML=
-    Object.keys(lojas)
-    .map(l=>`<option value="${l}">${l}</option>`)
-    .join("");
-
-    seletor.onchange=()=>{
-
-        analisarLoja(
-            seletor.value,
-            lojas[seletor.value]
-        );
-
-    };
 
 }
 
@@ -267,7 +182,7 @@ INICIALIZAR
 
 async function iniciar(){
 
-    const dados = await carregarDados();
+    const dados=await carregarDados();
 
     if(!dados.length) return;
 
@@ -276,18 +191,26 @@ async function iniciar(){
 
     const lojas={};
 
-    dados.forEach(item=>{
-        if(!lojas[item.Loja]) lojas[item.Loja]=[];
-        lojas[item.Loja].push(item);
+    dados.forEach(d=>{
+        if(!lojas[d.Loja]) lojas[d.Loja]=[];
+        lojas[d.Loja].push(d);
     });
 
-    preencherSeletor(lojas);
+    const seletor=document.getElementById("seletorLoja");
 
-    const primeira = Object.keys(lojas)[0];
+    seletor.innerHTML=
+    Object.keys(lojas)
+    .map(l=>`<option>${l}</option>`)
+    .join("");
 
-    if(primeira){
+    seletor.onchange=()=>{
+        analisarLoja(seletor.value,lojas[seletor.value]);
+    };
+
+    const primeira=Object.keys(lojas)[0];
+
+    if(primeira)
         analisarLoja(primeira,lojas[primeira]);
-    }
 
 }
 
