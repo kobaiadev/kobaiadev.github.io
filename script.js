@@ -1,11 +1,6 @@
 let dadosGlobais = [];
 let dadosAgrupados = {};
 
-const mesesOrdem = [
-    "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
-    "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
-];
-
 async function carregarDados() {
     const resposta = await fetch("perdas.json");
     const dados = await resposta.json();
@@ -132,73 +127,9 @@ function gerarGraficoGeral() {
     });
 }
 
-/* ================================
-   NOVA FUNÇÃO - GRÁFICOS MENSAIS
-================================ */
-
-function gerarGraficosMensaisPorLoja() {
-
-    const container = document.getElementById("graficosLojas");
-    container.innerHTML = "";
-
-    const lojas = [...new Set(dadosGlobais.map(d => d.Loja))].sort();
-
-    lojas.forEach(loja => {
-
-        const div = document.createElement("div");
-        div.style.marginTop = "40px";
-
-        const canvasId = `grafico_${loja.replace(/\s/g,'')}`;
-
-        div.innerHTML = `
-            <h3>${loja} - Evolução Mensal</h3>
-            <canvas id="${canvasId}" height="250"></canvas>
-        `;
-
-        container.appendChild(div);
-
-        const dadosLoja = dadosGlobais.filter(d => d.Loja === loja);
-        const anos = [...new Set(dadosLoja.map(d => d.Ano))].sort((a,b)=>a-b);
-
-        const datasets = anos.map(ano => {
-
-            const valoresMensais = mesesOrdem.map(mes => {
-                const registro = dadosLoja.find(d => d.Ano === ano && d["Mês"] === mes);
-                return registro ? Number(registro.Perdas) : 0;
-            });
-
-            return {
-                label: ano,
-                data: valoresMensais,
-                borderWidth: 2,
-                tension: 0.3,
-                fill: false
-            };
-        });
-
-        new Chart(document.getElementById(canvasId), {
-            type: "line",
-            data: {
-                labels: mesesOrdem,
-                datasets: datasets
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false
-            }
-        });
-
-    });
-}
-
-/* ================================
-   INICIALIZAÇÃO
-================================ */
-
 carregarDados().then(dados => {
     dadosAgrupados = agruparPorLojaEAno(dados);
     preencherFiltroAnos();
     gerarGraficoGeral();
     gerarGraficoRanking("");
-    gerarGraficosMensaisPorLoja(); // 👈 NOVO
 });
