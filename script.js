@@ -5,19 +5,41 @@ async function carregarDados() {
 
 function agruparPorLoja(dados) {
     const lojas = {};
-
     dados.forEach(item => {
         if (!lojas[item.Loja]) {
             lojas[item.Loja] = [];
         }
         lojas[item.Loja].push(item);
     });
-
     return lojas;
 }
 
+function abrirModal(loja, mes, datasets) {
+    const modal = document.getElementById("modal-dados");
+    const titulo = document.getElementById("modal-titulo");
+    const json = document.getElementById("modal-json");
+
+    titulo.textContent = `${loja} - ${mes}`;
+    json.textContent = JSON.stringify(datasets, null, 2);
+
+    modal.classList.add("open");
+}
+
+document.getElementById("btn-fechar").addEventListener("click", () => {
+    document.getElementById("modal-dados").classList.remove("open");
+});
+
 function criarGrafico(idCanvas, titulo, labels, datasets) {
-    new Chart(document.getElementById(idCanvas), {
+
+    const canvas = document.getElementById(idCanvas);
+
+    // Destruir gráfico anterior se existir
+    const chartExistente = Chart.getChart(canvas);
+    if (chartExistente) {
+        chartExistente.destroy();
+    }
+
+    new Chart(canvas, {
         type: "line",
         data: {
             labels,
@@ -27,6 +49,12 @@ function criarGrafico(idCanvas, titulo, labels, datasets) {
             responsive: true,
             plugins: {
                 title: { display: true, text: titulo }
+            },
+            onClick: (evt, elements) => {
+                if (elements.length > 0) {
+                    const index = elements[0].index;
+                    abrirModal(titulo, labels[index], datasets);
+                }
             }
         }
     });
@@ -39,7 +67,6 @@ function prepararSeries(dadosLoja) {
         "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
     ];
 
-    // Descobre anos existentes automaticamente
     const anos = [...new Set(dadosLoja.map(d => d.Ano))].sort((a,b)=>a-b);
 
     const datasets = anos.map(ano => {
@@ -66,10 +93,10 @@ function prepararSeries(dadosLoja) {
 }
 
 async function montarGraficos() {
+
     const dados = await carregarDados();
     const lojas = agruparPorLoja(dados);
 
-    // --- GRÁFICO GERAL ---
     const mesesOrd = [
         "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
         "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
@@ -106,7 +133,6 @@ async function montarGraficos() {
         datasetsGerais
     );
 
-    // --- GRÁFICOS POR LOJA ---
     const container = document.getElementById("graficos-lojas");
     container.innerHTML = "";
 
@@ -118,7 +144,7 @@ async function montarGraficos() {
         const div = document.createElement("div");
         div.className = "grafico-container";
 
-        const idCanvas = `grafico-${lojaNome.replace(/\s/g, "")}`;
+        const idCanvas = `grafico-${lojaNome.replace(/[^a-zA-Z0-9]/g, "")}`;
 
         div.innerHTML = `
             <h2>${lojaNome}</h2>
