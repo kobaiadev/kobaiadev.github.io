@@ -1,117 +1,1214 @@
 [
-{"Loja":"Loja 09","Ano":2024,"Mês":"Janeiro","Perdas":187.88},
-{"Loja":"Loja 09","Ano":2024,"Mês":"Fevereiro","Perdas":212.64},
-{"Loja":"Loja 09","Ano":2024,"Mês":"Março","Perdas":361.96},
-{"Loja":"Loja 09","Ano":2024,"Mês":"Abril","Perdas":273.81},
-{"Loja":"Loja 09","Ano":2024,"Mês":"Maio","Perdas":217.78},
-{"Loja":"Loja 09","Ano":2024,"Mês":"Junho","Perdas":254.09},
-{"Loja":"Loja 09","Ano":2024,"Mês":"Julho","Perdas":433.11},
-{"Loja":"Loja 09","Ano":2024,"Mês":"Agosto","Perdas":406.79},
-{"Loja":"Loja 09","Ano":2024,"Mês":"Setembro","Perdas":284.16},
-{"Loja":"Loja 09","Ano":2024,"Mês":"Outubro","Perdas":254.28},
-{"Loja":"Loja 09","Ano":2024,"Mês":"Novembro","Perdas":374.45},
-{"Loja":"Loja 09","Ano":2024,"Mês":"Dezembro","Perdas":382.97},
-
-{"Loja":"Loja 10","Ano":2024,"Mês":"Janeiro","Perdas":48.93},
-{"Loja":"Loja 10","Ano":2024,"Mês":"Fevereiro","Perdas":28.86},
-{"Loja":"Loja 10","Ano":2024,"Mês":"Março","Perdas":120.9},
-{"Loja":"Loja 10","Ano":2024,"Mês":"Abril","Perdas":1.2},
-{"Loja":"Loja 10","Ano":2024,"Mês":"Maio","Perdas":45.93},
-{"Loja":"Loja 10","Ano":2024,"Mês":"Junho","Perdas":36.49},
-{"Loja":"Loja 10","Ano":2024,"Mês":"Julho","Perdas":37.54},
-{"Loja":"Loja 10","Ano":2024,"Mês":"Agosto","Perdas":38.21},
-{"Loja":"Loja 10","Ano":2024,"Mês":"Setembro","Perdas":26.98},
-{"Loja":"Loja 10","Ano":2024,"Mês":"Outubro","Perdas":17.89},
-{"Loja":"Loja 10","Ano":2024,"Mês":"Novembro","Perdas":13.92},
-{"Loja":"Loja 10","Ano":2024,"Mês":"Dezembro","Perdas":52.21},
-
-{"Loja":"Loja 11","Ano":2024,"Mês":"Janeiro","Perdas":696.1},
-{"Loja":"Loja 11","Ano":2024,"Mês":"Fevereiro","Perdas":556.98},
-{"Loja":"Loja 11","Ano":2024,"Mês":"Março","Perdas":413.99},
-{"Loja":"Loja 11","Ano":2024,"Mês":"Abril","Perdas":363.15},
-{"Loja":"Loja 11","Ano":2024,"Mês":"Maio","Perdas":492.52},
-{"Loja":"Loja 11","Ano":2024,"Mês":"Junho","Perdas":399.33},
-{"Loja":"Loja 11","Ano":2024,"Mês":"Julho","Perdas":389.5},
-{"Loja":"Loja 11","Ano":2024,"Mês":"Agosto","Perdas":150.6},
-{"Loja":"Loja 11","Ano":2024,"Mês":"Setembro","Perdas":616.91},
-{"Loja":"Loja 11","Ano":2024,"Mês":"Outubro","Perdas":372.23},
-{"Loja":"Loja 11","Ano":2024,"Mês":"Novembro","Perdas":651.73},
-{"Loja":"Loja 11","Ano":2024,"Mês":"Dezembro","Perdas":572.37},
-
-{"Loja":"Loja 25","Ano":2024,"Mês":"Janeiro","Perdas":266.7},
-{"Loja":"Loja 25","Ano":2024,"Mês":"Fevereiro","Perdas":348.24},
-{"Loja":"Loja 25","Ano":2024,"Mês":"Março","Perdas":237.2},
-{"Loja":"Loja 25","Ano":2024,"Mês":"Abril","Perdas":155.57},
-{"Loja":"Loja 25","Ano":2024,"Mês":"Maio","Perdas":108.06},
-{"Loja":"Loja 25","Ano":2024,"Mês":"Junho","Perdas":93.39},
-{"Loja":"Loja 25","Ano":2024,"Mês":"Julho","Perdas":140.35},
-{"Loja":"Loja 25","Ano":2024,"Mês":"Agosto","Perdas":309.28},
-{"Loja":"Loja 25","Ano":2024,"Mês":"Setembro","Perdas":76.6},
-{"Loja":"Loja 25","Ano":2024,"Mês":"Outubro","Perdas":185.27},
-{"Loja":"Loja 25","Ano":2024,"Mês":"Novembro","Perdas":246.28},
-{"Loja":"Loja 25","Ano":2024,"Mês":"Dezembro","Perdas":131.4},
-
-{"Loja":"Loja 28","Ano":2024,"Mês":"Janeiro","Perdas":327.45},
-{"Loja":"Loja 28","Ano":2024,"Mês":"Fevereiro","Perdas":156.89},
-{"Loja":"Loja 28","Ano":2024,"Mês":"Março","Perdas":470.16},
-{"Loja":"Loja 28","Ano":2024,"Mês":"Abril","Perdas":372.12},
-{"Loja":"Loja 28","Ano":2024,"Mês":"Maio","Perdas":119.51},
-{"Loja":"Loja 28","Ano":2024,"Mês":"Junho","Perdas":343.41},
-{"Loja":"Loja 28","Ano":2024,"Mês":"Julho","Perdas":210.35},
-{"Loja":"Loja 28","Ano":2024,"Mês":"Agosto","Perdas":255.35},
-{"Loja":"Loja 28","Ano":2024,"Mês":"Setembro","Perdas":222.14},
-{"Loja":"Loja 28","Ano":2024,"Mês":"Outubro","Perdas":263.49},
-{"Loja":"Loja 28","Ano":2024,"Mês":"Novembro","Perdas":53.78},
-{"Loja":"Loja 28","Ano":2024,"Mês":"Dezembro","Perdas":168},
-
-{"Loja":"Loja 48","Ano":2024,"Mês":"Janeiro","Perdas":183.6},
-{"Loja":"Loja 48","Ano":2024,"Mês":"Fevereiro","Perdas":200.25},
-{"Loja":"Loja 48","Ano":2024,"Mês":"Março","Perdas":195.44},
-{"Loja":"Loja 48","Ano":2024,"Mês":"Abril","Perdas":130.62},
-{"Loja":"Loja 48","Ano":2024,"Mês":"Maio","Perdas":135.52},
-{"Loja":"Loja 48","Ano":2024,"Mês":"Junho","Perdas":254.99},
-{"Loja":"Loja 48","Ano":2024,"Mês":"Julho","Perdas":291.13},
-{"Loja":"Loja 48","Ano":2024,"Mês":"Agosto","Perdas":247.14},
-{"Loja":"Loja 48","Ano":2024,"Mês":"Setembro","Perdas":191.55},
-{"Loja":"Loja 48","Ano":2024,"Mês":"Outubro","Perdas":213.67},
-{"Loja":"Loja 48","Ano":2024,"Mês":"Novembro","Perdas":246.08},
-{"Loja":"Loja 48","Ano":2024,"Mês":"Dezembro","Perdas":394.93},
-
-{"Loja":"Loja 53","Ano":2024,"Mês":"Janeiro","Perdas":269.3},
-{"Loja":"Loja 53","Ano":2024,"Mês":"Fevereiro","Perdas":276.16},
-{"Loja":"Loja 53","Ano":2024,"Mês":"Março","Perdas":331.68},
-{"Loja":"Loja 53","Ano":2024,"Mês":"Abril","Perdas":204.76},
-{"Loja":"Loja 53","Ano":2024,"Mês":"Maio","Perdas":258.67},
-{"Loja":"Loja 53","Ano":2024,"Mês":"Junho","Perdas":178.34},
-{"Loja":"Loja 53","Ano":2024,"Mês":"Julho","Perdas":204.26},
-{"Loja":"Loja 53","Ano":2024,"Mês":"Agosto","Perdas":183.79},
-{"Loja":"Loja 53","Ano":2024,"Mês":"Setembro","Perdas":119.97},
-{"Loja":"Loja 53","Ano":2024,"Mês":"Outubro","Perdas":288.12},
-{"Loja":"Loja 53","Ano":2024,"Mês":"Novembro","Perdas":223.76},
-{"Loja":"Loja 53","Ano":2024,"Mês":"Dezembro","Perdas":202.88},
-
-{"Loja":"Loja 36","Ano":2024,"Mês":"Janeiro","Perdas":118.31},
-{"Loja":"Loja 36","Ano":2024,"Mês":"Fevereiro","Perdas":81.37},
-{"Loja":"Loja 36","Ano":2024,"Mês":"Março","Perdas":202.32},
-{"Loja":"Loja 36","Ano":2024,"Mês":"Abril","Perdas":226.63},
-{"Loja":"Loja 36","Ano":2024,"Mês":"Maio","Perdas":258.67},
-{"Loja":"Loja 36","Ano":2024,"Mês":"Junho","Perdas":199.06},
-{"Loja":"Loja 36","Ano":2024,"Mês":"Julho","Perdas":167.83},
-{"Loja":"Loja 36","Ano":2024,"Mês":"Agosto","Perdas":82.12},
-{"Loja":"Loja 36","Ano":2024,"Mês":"Setembro","Perdas":214.61},
-{"Loja":"Loja 36","Ano":2024,"Mês":"Outubro","Perdas":94.08},
-{"Loja":"Loja 36","Ano":2024,"Mês":"Novembro","Perdas":145.09},
-{"Loja":"Loja 36","Ano":2024,"Mês":"Dezembro","Perdas":126.28},
-
-{"Loja":"Loja 59","Ano":2025,"Mês":"Dezembro","Perdas":1557},
-{"Loja":"Loja 59","Ano":2026,"Mês":"Janeiro","Perdas":313.06},
-
-{"Loja":"Loja 09","Ano":2026,"Mês":"Janeiro","Perdas":451.91},
-{"Loja":"Loja 10","Ano":2026,"Mês":"Janeiro","Perdas":15.61},
-{"Loja":"Loja 11","Ano":2026,"Mês":"Janeiro","Perdas":715.11},
-{"Loja":"Loja 25","Ano":2026,"Mês":"Janeiro","Perdas":29.08},
-{"Loja":"Loja 28","Ano":2026,"Mês":"Janeiro","Perdas":150.61},
-{"Loja":"Loja 36","Ano":2026,"Mês":"Janeiro","Perdas":138.58},
-{"Loja":"Loja 48","Ano":2026,"Mês":"Janeiro","Perdas":428.49},
-{"Loja":"Loja 53","Ano":2026,"Mês":"Janeiro","Perdas":148.65}
+  {
+    "ano": 2024,
+    "loja": 9,
+    "mes": "Janeiro",
+    "valor": 187.88
+  },
+  {
+    "ano": 2024,
+    "loja": 9,
+    "mes": "Fevereiro",
+    "valor": 212.64
+  },
+  {
+    "ano": 2024,
+    "loja": 9,
+    "mes": "Março",
+    "valor": 361.96
+  },
+  {
+    "ano": 2024,
+    "loja": 9,
+    "mes": "Abril",
+    "valor": 273.81
+  },
+  {
+    "ano": 2024,
+    "loja": 9,
+    "mes": "Maio",
+    "valor": 217.78
+  },
+  {
+    "ano": 2024,
+    "loja": 9,
+    "mes": "Junho",
+    "valor": 254.09
+  },
+  {
+    "ano": 2024,
+    "loja": 9,
+    "mes": "Julho",
+    "valor": 433.11
+  },
+  {
+    "ano": 2024,
+    "loja": 9,
+    "mes": "Agosto",
+    "valor": 406.79
+  },
+  {
+    "ano": 2024,
+    "loja": 9,
+    "mes": "Setembro",
+    "valor": 284.16
+  },
+  {
+    "ano": 2024,
+    "loja": 9,
+    "mes": "Outubro",
+    "valor": 254.28
+  },
+  {
+    "ano": 2024,
+    "loja": 9,
+    "mes": "Novembro",
+    "valor": 374.45
+  },
+  {
+    "ano": 2024,
+    "loja": 9,
+    "mes": "Dezembro",
+    "valor": 382.97
+  },
+  {
+    "ano": 2024,
+    "loja": 10,
+    "mes": "Janeiro",
+    "valor": 48.93
+  },
+  {
+    "ano": 2024,
+    "loja": 10,
+    "mes": "Fevereiro",
+    "valor": 28.86
+  },
+  {
+    "ano": 2024,
+    "loja": 10,
+    "mes": "Março",
+    "valor": 120.9
+  },
+  {
+    "ano": 2024,
+    "loja": 10,
+    "mes": "Abril",
+    "valor": 1.2
+  },
+  {
+    "ano": 2024,
+    "loja": 10,
+    "mes": "Maio",
+    "valor": 45.93
+  },
+  {
+    "ano": 2024,
+    "loja": 10,
+    "mes": "Junho",
+    "valor": 36.49
+  },
+  {
+    "ano": 2024,
+    "loja": 10,
+    "mes": "Julho",
+    "valor": 37.54
+  },
+  {
+    "ano": 2024,
+    "loja": 10,
+    "mes": "Agosto",
+    "valor": 38.21
+  },
+  {
+    "ano": 2024,
+    "loja": 10,
+    "mes": "Setembro",
+    "valor": 26.98
+  },
+  {
+    "ano": 2024,
+    "loja": 10,
+    "mes": "Outubro",
+    "valor": 17.89
+  },
+  {
+    "ano": 2024,
+    "loja": 10,
+    "mes": "Novembro",
+    "valor": 13.92
+  },
+  {
+    "ano": 2024,
+    "loja": 10,
+    "mes": "Dezembro",
+    "valor": 52.21
+  },
+  {
+    "ano": 2024,
+    "loja": 11,
+    "mes": "Janeiro",
+    "valor": 696.1
+  },
+  {
+    "ano": 2024,
+    "loja": 11,
+    "mes": "Fevereiro",
+    "valor": 556.98
+  },
+  {
+    "ano": 2024,
+    "loja": 11,
+    "mes": "Março",
+    "valor": 413.99
+  },
+  {
+    "ano": 2024,
+    "loja": 11,
+    "mes": "Abril",
+    "valor": 363.15
+  },
+  {
+    "ano": 2024,
+    "loja": 11,
+    "mes": "Maio",
+    "valor": 492.52
+  },
+  {
+    "ano": 2024,
+    "loja": 11,
+    "mes": "Junho",
+    "valor": 399.33
+  },
+  {
+    "ano": 2024,
+    "loja": 11,
+    "mes": "Julho",
+    "valor": 389.5
+  },
+  {
+    "ano": 2024,
+    "loja": 11,
+    "mes": "Agosto",
+    "valor": 150.6
+  },
+  {
+    "ano": 2024,
+    "loja": 11,
+    "mes": "Setembro",
+    "valor": 616.91
+  },
+  {
+    "ano": 2024,
+    "loja": 11,
+    "mes": "Outubro",
+    "valor": 372.23
+  },
+  {
+    "ano": 2024,
+    "loja": 11,
+    "mes": "Novembro",
+    "valor": 651.73
+  },
+  {
+    "ano": 2024,
+    "loja": 11,
+    "mes": "Dezembro",
+    "valor": 572.37
+  },
+  {
+    "ano": 2024,
+    "loja": 25,
+    "mes": "Janeiro",
+    "valor": 266.7
+  },
+  {
+    "ano": 2024,
+    "loja": 25,
+    "mes": "Fevereiro",
+    "valor": 348.24
+  },
+  {
+    "ano": 2024,
+    "loja": 25,
+    "mes": "Março",
+    "valor": 237.2
+  },
+  {
+    "ano": 2024,
+    "loja": 25,
+    "mes": "Abril",
+    "valor": 155.57
+  },
+  {
+    "ano": 2024,
+    "loja": 25,
+    "mes": "Maio",
+    "valor": 108.06
+  },
+  {
+    "ano": 2024,
+    "loja": 25,
+    "mes": "Junho",
+    "valor": 93.39
+  },
+  {
+    "ano": 2024,
+    "loja": 25,
+    "mes": "Julho",
+    "valor": 140.35
+  },
+  {
+    "ano": 2024,
+    "loja": 25,
+    "mes": "Agosto",
+    "valor": 309.28
+  },
+  {
+    "ano": 2024,
+    "loja": 25,
+    "mes": "Setembro",
+    "valor": 76.6
+  },
+  {
+    "ano": 2024,
+    "loja": 25,
+    "mes": "Outubro",
+    "valor": 185.27
+  },
+  {
+    "ano": 2024,
+    "loja": 25,
+    "mes": "Novembro",
+    "valor": 246.28
+  },
+  {
+    "ano": 2024,
+    "loja": 25,
+    "mes": "Dezembro",
+    "valor": 131.4
+  },
+  {
+    "ano": 2024,
+    "loja": 28,
+    "mes": "Janeiro",
+    "valor": 327.45
+  },
+  {
+    "ano": 2024,
+    "loja": 28,
+    "mes": "Fevereiro",
+    "valor": 156.89
+  },
+  {
+    "ano": 2024,
+    "loja": 28,
+    "mes": "Março",
+    "valor": 470.16
+  },
+  {
+    "ano": 2024,
+    "loja": 28,
+    "mes": "Abril",
+    "valor": 372.12
+  },
+  {
+    "ano": 2024,
+    "loja": 28,
+    "mes": "Maio",
+    "valor": 119.51
+  },
+  {
+    "ano": 2024,
+    "loja": 28,
+    "mes": "Junho",
+    "valor": 343.41
+  },
+  {
+    "ano": 2024,
+    "loja": 28,
+    "mes": "Julho",
+    "valor": 210.35
+  },
+  {
+    "ano": 2024,
+    "loja": 28,
+    "mes": "Agosto",
+    "valor": 255.35
+  },
+  {
+    "ano": 2024,
+    "loja": 28,
+    "mes": "Setembro",
+    "valor": 222.14
+  },
+  {
+    "ano": 2024,
+    "loja": 28,
+    "mes": "Outubro",
+    "valor": 263.49
+  },
+  {
+    "ano": 2024,
+    "loja": 28,
+    "mes": "Novembro",
+    "valor": 53.78
+  },
+  {
+    "ano": 2024,
+    "loja": 28,
+    "mes": "Dezembro",
+    "valor": 168.0
+  },
+  {
+    "ano": 2024,
+    "loja": 48,
+    "mes": "Janeiro",
+    "valor": 183.6
+  },
+  {
+    "ano": 2024,
+    "loja": 48,
+    "mes": "Fevereiro",
+    "valor": 200.25
+  },
+  {
+    "ano": 2024,
+    "loja": 48,
+    "mes": "Março",
+    "valor": 195.44
+  },
+  {
+    "ano": 2024,
+    "loja": 48,
+    "mes": "Abril",
+    "valor": 130.62
+  },
+  {
+    "ano": 2024,
+    "loja": 48,
+    "mes": "Maio",
+    "valor": 135.52
+  },
+  {
+    "ano": 2024,
+    "loja": 48,
+    "mes": "Junho",
+    "valor": 254.99
+  },
+  {
+    "ano": 2024,
+    "loja": 48,
+    "mes": "Julho",
+    "valor": 291.13
+  },
+  {
+    "ano": 2024,
+    "loja": 48,
+    "mes": "Agosto",
+    "valor": 247.14
+  },
+  {
+    "ano": 2024,
+    "loja": 48,
+    "mes": "Setembro",
+    "valor": 191.55
+  },
+  {
+    "ano": 2024,
+    "loja": 48,
+    "mes": "Outubro",
+    "valor": 213.67
+  },
+  {
+    "ano": 2024,
+    "loja": 48,
+    "mes": "Novembro",
+    "valor": 246.08
+  },
+  {
+    "ano": 2024,
+    "loja": 48,
+    "mes": "Dezembro",
+    "valor": 394.93
+  },
+  {
+    "ano": 2024,
+    "loja": 53,
+    "mes": "Janeiro",
+    "valor": 269.3
+  },
+  {
+    "ano": 2024,
+    "loja": 53,
+    "mes": "Fevereiro",
+    "valor": 276.16
+  },
+  {
+    "ano": 2024,
+    "loja": 53,
+    "mes": "Março",
+    "valor": 331.68
+  },
+  {
+    "ano": 2024,
+    "loja": 53,
+    "mes": "Abril",
+    "valor": 204.76
+  },
+  {
+    "ano": 2024,
+    "loja": 53,
+    "mes": "Maio",
+    "valor": 258.67
+  },
+  {
+    "ano": 2024,
+    "loja": 53,
+    "mes": "Junho",
+    "valor": 178.34
+  },
+  {
+    "ano": 2024,
+    "loja": 53,
+    "mes": "Julho",
+    "valor": 204.26
+  },
+  {
+    "ano": 2024,
+    "loja": 53,
+    "mes": "Agosto",
+    "valor": 183.79
+  },
+  {
+    "ano": 2024,
+    "loja": 53,
+    "mes": "Setembro",
+    "valor": 119.97
+  },
+  {
+    "ano": 2024,
+    "loja": 53,
+    "mes": "Outubro",
+    "valor": 288.12
+  },
+  {
+    "ano": 2024,
+    "loja": 53,
+    "mes": "Novembro",
+    "valor": 223.76
+  },
+  {
+    "ano": 2024,
+    "loja": 53,
+    "mes": "Dezembro",
+    "valor": 202.88
+  },
+  {
+    "ano": 2024,
+    "loja": 36,
+    "mes": "Janeiro",
+    "valor": 118.31
+  },
+  {
+    "ano": 2024,
+    "loja": 36,
+    "mes": "Fevereiro",
+    "valor": 81.37
+  },
+  {
+    "ano": 2024,
+    "loja": 36,
+    "mes": "Março",
+    "valor": 202.32
+  },
+  {
+    "ano": 2024,
+    "loja": 36,
+    "mes": "Abril",
+    "valor": 226.63
+  },
+  {
+    "ano": 2024,
+    "loja": 36,
+    "mes": "Maio",
+    "valor": 258.67
+  },
+  {
+    "ano": 2024,
+    "loja": 36,
+    "mes": "Junho",
+    "valor": 199.06
+  },
+  {
+    "ano": 2024,
+    "loja": 36,
+    "mes": "Julho",
+    "valor": 167.83
+  },
+  {
+    "ano": 2024,
+    "loja": 36,
+    "mes": "Agosto",
+    "valor": 82.12
+  },
+  {
+    "ano": 2024,
+    "loja": 36,
+    "mes": "Setembro",
+    "valor": 214.61
+  },
+  {
+    "ano": 2024,
+    "loja": 36,
+    "mes": "Outubro",
+    "valor": 94.08
+  },
+  {
+    "ano": 2024,
+    "loja": 36,
+    "mes": "Novembro",
+    "valor": 145.09
+  },
+  {
+    "ano": 2024,
+    "loja": 36,
+    "mes": "Dezembro",
+    "valor": 126.28
+  },
+  {
+    "ano": 2025,
+    "loja": 28,
+    "mes": "Janeiro",
+    "valor": 96.78
+  },
+  {
+    "ano": 2025,
+    "loja": 9,
+    "mes": "Janeiro",
+    "valor": 467.5
+  },
+  {
+    "ano": 2025,
+    "loja": 10,
+    "mes": "Janeiro",
+    "valor": 18.73
+  },
+  {
+    "ano": 2025,
+    "loja": 11,
+    "mes": "Janeiro",
+    "valor": 530.52
+  },
+  {
+    "ano": 2025,
+    "loja": 25,
+    "mes": "Janeiro",
+    "valor": 59.96
+  },
+  {
+    "ano": 2025,
+    "loja": 9,
+    "mes": "Fevereiro",
+    "valor": 423.99
+  },
+  {
+    "ano": 2025,
+    "loja": 10,
+    "mes": "Fevereiro",
+    "valor": 47.21
+  },
+  {
+    "ano": 2025,
+    "loja": 11,
+    "mes": "Fevereiro",
+    "valor": 352.6
+  },
+  {
+    "ano": 2025,
+    "loja": 25,
+    "mes": "Fevereiro",
+    "valor": 108.17
+  },
+  {
+    "ano": 2025,
+    "loja": 28,
+    "mes": "Fevereiro",
+    "valor": 131.81
+  },
+  {
+    "ano": 2025,
+    "loja": 48,
+    "mes": "Julho",
+    "valor": 404.12
+  },
+  {
+    "ano": 2025,
+    "loja": 9,
+    "mes": "Março",
+    "valor": 444.17
+  },
+  {
+    "ano": 2025,
+    "loja": 10,
+    "mes": "Março",
+    "valor": 48.43
+  },
+  {
+    "ano": 2025,
+    "loja": 36,
+    "mes": "Março",
+    "valor": 246.21
+  },
+  {
+    "ano": 2025,
+    "loja": 11,
+    "mes": "Março",
+    "valor": 721.69
+  },
+  {
+    "ano": 2025,
+    "loja": 25,
+    "mes": "Março",
+    "valor": 154.24
+  },
+  {
+    "ano": 2025,
+    "loja": 28,
+    "mes": "Março",
+    "valor": 324.99
+  },
+  {
+    "ano": 2025,
+    "loja": 36,
+    "mes": "Janeiro",
+    "valor": 175.85
+  },
+  {
+    "ano": 2025,
+    "loja": 36,
+    "mes": "Fevereiro",
+    "valor": 116.23
+  },
+  {
+    "ano": 2025,
+    "loja": 53,
+    "mes": "Janeiro",
+    "valor": 281.04
+  },
+  {
+    "ano": 2025,
+    "loja": 53,
+    "mes": "Fevereiro",
+    "valor": 63.68
+  },
+  {
+    "ano": 2025,
+    "loja": 48,
+    "mes": "Janeiro",
+    "valor": 340.18
+  },
+  {
+    "ano": 2025,
+    "loja": 48,
+    "mes": "Fevereiro",
+    "valor": 326.2
+  },
+  {
+    "ano": 2025,
+    "loja": 28,
+    "mes": "Abril",
+    "valor": 295.77
+  },
+  {
+    "ano": 2025,
+    "loja": 25,
+    "mes": "Abril",
+    "valor": 234.07
+  },
+  {
+    "ano": 2025,
+    "loja": 11,
+    "mes": "Abril",
+    "valor": 358.22
+  },
+  {
+    "ano": 2025,
+    "loja": 10,
+    "mes": "Abril",
+    "valor": 28.7
+  },
+  {
+    "ano": 2025,
+    "loja": 9,
+    "mes": "Abril",
+    "valor": 558.86
+  },
+  {
+    "ano": 2025,
+    "loja": 48,
+    "mes": "Abril",
+    "valor": 210.11
+  },
+  {
+    "ano": 2025,
+    "loja": 36,
+    "mes": "Abril",
+    "valor": 195.54
+  },
+  {
+    "ano": 2025,
+    "loja": 28,
+    "mes": "Maio",
+    "valor": 42.98
+  },
+  {
+    "ano": 2025,
+    "loja": 53,
+    "mes": "Abril",
+    "valor": 110.77
+  },
+  {
+    "ano": 2025,
+    "loja": 48,
+    "mes": "Março",
+    "valor": 754.34
+  },
+  {
+    "ano": 2025,
+    "loja": 25,
+    "mes": "Maio",
+    "valor": 228.13
+  },
+  {
+    "ano": 2025,
+    "loja": 36,
+    "mes": "Maio",
+    "valor": 189.96
+  },
+  {
+    "ano": 2025,
+    "loja": 48,
+    "mes": "Maio",
+    "valor": 195.32
+  },
+  {
+    "ano": 2025,
+    "loja": 53,
+    "mes": "Maio",
+    "valor": 139.38
+  },
+  {
+    "ano": 2025,
+    "loja": 9,
+    "mes": "Maio",
+    "valor": 414.55
+  },
+  {
+    "ano": 2025,
+    "loja": 10,
+    "mes": "Maio",
+    "valor": 22.25
+  },
+  {
+    "ano": 2025,
+    "loja": 11,
+    "mes": "Maio",
+    "valor": 621.39
+  },
+  {
+    "ano": 2025,
+    "loja": 53,
+    "mes": "Junho",
+    "valor": 99.22
+  },
+  {
+    "ano": 2025,
+    "loja": 25,
+    "mes": "Junho",
+    "valor": 70.39
+  },
+  {
+    "ano": 2025,
+    "loja": 28,
+    "mes": "Junho",
+    "valor": 186.56
+  },
+  {
+    "ano": 2025,
+    "loja": 36,
+    "mes": "Junho",
+    "valor": 114.26
+  },
+  {
+    "ano": 2025,
+    "loja": 48,
+    "mes": "Junho",
+    "valor": 369.06
+  },
+  {
+    "ano": 2025,
+    "loja": 53,
+    "mes": "Julho",
+    "valor": 177.12
+  },
+  {
+    "ano": 2025,
+    "loja": 25,
+    "mes": "Julho",
+    "valor": 133.81
+  },
+  {
+    "ano": 2025,
+    "loja": 28,
+    "mes": "Julho",
+    "valor": 46.7
+  },
+  {
+    "ano": 2025,
+    "loja": 36,
+    "mes": "Julho",
+    "valor": 214.1
+  },
+  {
+    "ano": 2025,
+    "loja": 9,
+    "mes": "Junho",
+    "valor": 416.67
+  },
+  {
+    "ano": 2025,
+    "loja": 10,
+    "mes": "Junho",
+    "valor": 33.66
+  },
+  {
+    "ano": 2025,
+    "loja": 53,
+    "mes": "Março",
+    "valor": 138.35
+  },
+  {
+    "ano": 2025,
+    "loja": 11,
+    "mes": "Junho",
+    "valor": 539.13
+  },
+  {
+    "ano": 2025,
+    "loja": 11,
+    "mes": "Julho",
+    "valor": 583.64
+  },
+  {
+    "ano": 2025,
+    "loja": 10,
+    "mes": "Julho",
+    "valor": 74.78
+  },
+  {
+    "ano": 2025,
+    "loja": 9,
+    "mes": "Julho",
+    "valor": 416.67
+  },
+  {
+    "ano": 2025,
+    "loja": 36,
+    "mes": "Agosto",
+    "valor": 116.56
+  },
+  {
+    "ano": 2025,
+    "loja": 25,
+    "mes": "Agosto",
+    "valor": 160.07
+  },
+  {
+    "ano": 2025,
+    "loja": 53,
+    "mes": "Agosto",
+    "valor": 189.03
+  },
+  {
+    "ano": 2025,
+    "loja": 28,
+    "mes": "Agosto",
+    "valor": 302.07
+  },
+  {
+    "ano": 2025,
+    "loja": 48,
+    "mes": "Agosto",
+    "valor": 622.18
+  },
+  {
+    "ano": 2025,
+    "loja": 11,
+    "mes": "Agosto",
+    "valor": 598.31
+  },
+  {
+    "ano": 2025,
+    "loja": 10,
+    "mes": "Agosto",
+    "valor": 115.19
+  },
+  {
+    "ano": 2025,
+    "loja": 9,
+    "mes": "Agosto",
+    "valor": 592.73
+  },
+  {
+    "ano": 2025,
+    "loja": 53,
+    "mes": "Setembro",
+    "valor": 77.18
+  },
+  {
+    "ano": 2025,
+    "loja": 48,
+    "mes": "Setembro",
+    "valor": 286.17
+  },
+  {
+    "ano": 2025,
+    "loja": 36,
+    "mes": "Setembro",
+    "valor": 120.54
+  },
+  {
+    "ano": 2025,
+    "loja": 25,
+    "mes": "Setembro",
+    "valor": 197.87
+  },
+  {
+    "ano": 2025,
+    "loja": 28,
+    "mes": "Setembro",
+    "valor": 136.89
+  },
+  {
+    "ano": 2025,
+    "loja": 11,
+    "mes": "Setembro",
+    "valor": 703.01
+  },
+  {
+    "ano": 2025,
+    "loja": 10,
+    "mes": "Setembro",
+    "valor": 25.87
+  },
+  {
+    "ano": 2025,
+    "loja": 9,
+    "mes": "Setembro",
+    "valor": 480.21
+  },
+  {
+    "ano": 2025,
+    "loja": 53,
+    "mes": "Outubro",
+    "valor": 310.6
+  },
+  {
+    "ano": 2025,
+    "loja": 10,
+    "mes": "Outubro",
+    "valor": 10.98
+  },
+  {
+    "ano": 2025,
+    "loja": 11,
+    "mes": "Outubro",
+    "valor": 709.22
+  },
+  {
+    "ano": 2025,
+    "loja": 9,
+    "mes": "Outubro",
+    "valor": 335.62
+  },
+  {
+    "ano": 2025,
+    "loja": 48,
+    "mes": "Outubro",
+    "valor": 354.96
+  },
+  {
+    "ano": 2025,
+    "loja": 36,
+    "mes": "Outubro",
+    "valor": 232.99
+  },
+  {
+    "ano": 2025,
+    "loja": 28,
+    "mes": "Outubro",
+    "valor": 162.04
+  },
+  {
+    "ano": 2025,
+    "loja": 25,
+    "mes": "Outubro",
+    "valor": 233.17
+  },
+  {
+    "ano": 2025,
+    "loja": 9,
+    "mes": "Novembro",
+    "valor": 377.3
+  },
+  {
+    "ano": 2025,
+    "loja": 11,
+    "mes": "Novembro",
+    "valor": 590.31
+  },
+  {
+    "ano": 2025,
+    "loja": 25,
+    "mes": "Novembro",
+    "valor": 199.35
+  },
+  {
+    "ano": 2025,
+    "loja": 36,
+    "mes": "Novembro",
+    "valor": 127.52
+  },
+  {
+    "ano": 2025,
+    "loja": 53,
+    "mes": "Novembro",
+    "valor": 248.11
+  },
+  {
+    "ano": 2025,
+    "loja": 28,
+    "mes": "Novembro",
+    "valor": 84.25
+  },
+  {
+    "ano": 2025,
+    "loja": 48,
+    "mes": "Novembro",
+    "valor": 255.46
+  },
+  {
+    "ano": 2025,
+    "loja": 10,
+    "mes": "Novembro",
+    "valor": 61.16
+  },
+  {
+    "ano": 2025,
+    "loja": 9,
+    "mes": "Dezembro",
+    "valor": 655.7
+  },
+  {
+    "ano": 2025,
+    "loja": 10,
+    "mes": "Dezembro",
+    "valor": 8.19
+  },
+  {
+    "ano": 2025,
+    "loja": 11,
+    "mes": "Dezembro",
+    "valor": 821.06
+  },
+  {
+    "ano": 2025,
+    "loja": 36,
+    "mes": "Dezembro",
+    "valor": 170.88
+  },
+  {
+    "ano": 2025,
+    "loja": 53,
+    "mes": "Dezembro",
+    "valor": 245.76
+  },
+  {
+    "ano": 2025,
+    "loja": 25,
+    "mes": "Dezembro",
+    "valor": 57.85
+  },
+  {
+    "ano": 2025,
+    "loja": 28,
+    "mes": "Dezembro",
+    "valor": 128.68
+  },
+  {
+    "ano": 2025,
+    "loja": 48,
+    "mes": "Dezembro",
+    "valor": 281.42
+  },
+  {
+    "ano": 2025,
+    "loja": 59,
+    "mes": "Dezembro",
+    "valor": 1557.0
+  },
+  {
+    "ano": 2026,
+    "loja": 28,
+    "mes": "Janeiro",
+    "valor": 150.61
+  },
+  {
+    "ano": 2026,
+    "loja": 25,
+    "mes": "Janeiro",
+    "valor": 29.08
+  },
+  {
+    "ano": 2026,
+    "loja": 48,
+    "mes": "Janeiro",
+    "valor": 428.49
+  },
+  {
+    "ano": 2026,
+    "loja": 59,
+    "mes": "Janeiro",
+    "valor": 313.06
+  },
+  {
+    "ano": 2026,
+    "loja": 9,
+    "mes": "Janeiro",
+    "valor": 451.91
+  },
+  {
+    "ano": 2026,
+    "loja": 10,
+    "mes": "Janeiro",
+    "valor": 15.61
+  },
+  {
+    "ano": 2026,
+    "loja": 11,
+    "mes": "Janeiro",
+    "valor": 715.11
+  },
+  {
+    "ano": 2026,
+    "loja": 36,
+    "mes": "Janeiro",
+    "valor": 138.58
+  },
+  {
+    "ano": 2026,
+    "loja": 53,
+    "mes": "Janeiro",
+    "valor": 148.65
+  }
 ]
