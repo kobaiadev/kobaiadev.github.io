@@ -1,129 +1,42 @@
 async function carregarDados() {
     const resposta = await fetch("perdas.json");
-    const dados = await resposta.json();
-    return dados;
+    return await resposta.json();
 }
 
-function agruparPorAno(dados) {
-    const anos = {};
-
-    dados.forEach(item => {
-        const ano = String(item.ano); // garante string
-        const valor = Number(item.valor) || 0;
-
-        if (!anos[ano]) {
-            anos[ano] = 0;
-        }
-
-        anos[ano] += valor;
-    });
-
-    return anos;
-}
-
-function agruparPorLoja(dados) {
-    const lojas = {};
-
-    dados.forEach(item => {
-        const loja = String(item.loja);
-        const valor = Number(item.valor) || 0;
-
-        if (!lojas[loja]) {
-            lojas[loja] = 0;
-        }
-
-        lojas[loja] += valor;
-    });
-
-    return lojas;
-}
-
-function agruparAnoPorLoja(dados) {
+function agruparPorLojaEAno(dados) {
     const resultado = {};
 
     dados.forEach(item => {
-        const ano = String(item.ano);
-        const loja = String(item.loja);
+        const loja = item.loja;
+        const ano = item.ano;
         const valor = Number(item.valor) || 0;
 
-        if (!resultado[ano]) {
-            resultado[ano] = {};
-        }
+        if (!resultado[loja]) resultado[loja] = {};
+        if (!resultado[loja][ano]) resultado[loja][ano] = 0;
 
-        if (!resultado[ano][loja]) {
-            resultado[ano][loja] = 0;
-        }
-
-        resultado[ano][loja] += valor;
+        resultado[loja][ano] += valor;
     });
 
     return resultado;
 }
 
-function gerarGraficoAnual(dados) {
-    const anosAgrupados = agruparPorAno(dados);
-
-    const labels = Object.keys(anosAgrupados).sort();
-    const valores = labels.map(ano => anosAgrupados[ano]);
-
-    new Chart(document.getElementById("graficoAnual"), {
-        type: "bar",
-        data: {
-            labels: labels,
-            datasets: [{
-                label: "Perdas por Ano",
-                data: valores,
-                borderWidth: 1
-            }]
-        }
-    });
-}
-
-function gerarGraficoPorLoja(dados) {
-    const lojasAgrupadas = agruparPorLoja(dados);
-
-    const labels = Object.keys(lojasAgrupadas).sort((a,b) => Number(a)-Number(b));
-    const valores = labels.map(loja => lojasAgrupadas[loja]);
-
-    new Chart(document.getElementById("graficoLoja"), {
-        type: "bar",
-        data: {
-            labels: labels,
-            datasets: [{
-                label: "Perdas por Loja",
-                data: valores,
-                borderWidth: 1
-            }]
-        }
-    });
-}
-
-function gerarGraficoComparativo(dados) {
-    const dadosAnoLoja = agruparAnoPorLoja(dados);
-
-    const anos = Object.keys(dadosAnoLoja).sort();
-    
-    // pega todas as lojas existentes
-    const todasLojas = new Set();
-    anos.forEach(ano => {
-        Object.keys(dadosAnoLoja[ano]).forEach(loja => {
-            todasLojas.add(loja);
-        });
-    });
-
-    const lojas = Array.from(todasLojas).sort((a,b) => Number(a)-Number(b));
+function gerarGraficoGeral(dadosAgrupados) {
+    const lojas = Object.keys(dadosAgrupados).sort((a,b)=>a-b);
+    const anos = [...new Set(
+        Object.values(dadosAgrupados)
+        .flatMap(loja => Object.keys(loja))
+    )].sort();
 
     const datasets = anos.map(ano => {
         return {
             label: ano,
-            data: lojas.map(loja => dadosAnoLoja[ano][loja] || 0),
-            fill: false,
-            tension: 0.1
+            data: lojas.map(loja => dadosAgrupados[loja][ano] || 0),
+            borderWidth: 2
         };
     });
 
-    new Chart(document.getElementById("graficoComparativo"), {
-        type: "line",
+    new Chart(document.getElementById("graficoGeral"), {
+        type: "bar",
         data: {
             labels: lojas,
             datasets: datasets
@@ -131,8 +44,67 @@ function gerarGraficoComparativo(dados) {
     });
 }
 
+function gerarGraficosPorLoja(dadosAgrupados, dadosOriginais) {
+    const container = document.getElementById("graficos-lojas");
+    container.innerHTML = "";
+
+    Object.keys(dadosAgrupados)
+        .sort((a,b)=>a-b)
+        .forEach(loja => {
+
+        const div = document.createElement("div");
+        div.className = "grafico-container";
+
+        div.innerHTML = `
+            <h2>Loja ${loja}</h2>
+            <canvas id="grafico-loja-${loja}" height="200"></canvas>
+            <button onclick="abrirModal(${loja})">Ver Dados</button>
+        `;
+
+        container.appendChild(div);
+
+        const anos = Object.keys(dadosAgrupados[loja]).sort();
+        const valores = anos.map(ano => dadosAgrupados[loja][ano]);
+
+        new Chart(
+            document.getElementById(`grafico-loja-${loja}`),
+            {
+                type: "line",
+                data: {
+                    labels: anos,
+                    datasets: [{
+                        label: `Loja ${loja}`,
+                        data: valores,
+                        borderWidth: 2,
+                        tension: 0.2
+                    }]
+                }
+            }
+        );
+    });
+}
+
+function abrirModal(loja) {
+    const modal = document.getElementById("modal-dados");
+    const titulo = document.getElementById("modal-titulo");
+    const jsonBox = document.getElementById("modal-json");
+
+    titulo.innerText = `Dados da Loja ${loja}`;
+
+    carregarDados().then(dados => {
+        const dadosLoja = dados.filter(d => d.loja == loja);
+        jsonBox.innerText = JSON.stringify(dadosLoja, null, 2);
+    });
+
+    modal.classList.add("open");
+}
+
+document.getElementById("btn-fechar").addEventListener("click", () => {
+    document.getElementById("modal-dados").classList.remove("open");
+});
+
 carregarDados().then(dados => {
-    gerarGraficoAnual(dados);
-    gerarGraficoPorLoja(dados);
-    gerarGraficoComparativo(dados);
+    const agrupado = agruparPorLojaEAno(dados);
+    gerarGraficoGeral(agrupado);
+    gerarGraficosPorLoja(agrupado, dados);
 });
