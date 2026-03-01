@@ -30,35 +30,6 @@
             width: 100%;
         }
 
-        /* pesquisa UI */
-        .consulta-container {
-            background: white;
-            padding: 1rem;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            margin-bottom: 1rem;
-            display: flex;
-            gap: .5rem;
-            align-items: center;
-        }
-
-        .consulta-container input[type="text"] {
-            flex: 1;
-            padding: .5rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .consulta-container button {
-            padding: .5rem 1rem;
-            border: none;
-            background: #0066cc;
-            color: white;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        /* modal simples */
         .modal {
             position: fixed;
             inset: 0;
@@ -103,14 +74,16 @@
             cursor: pointer;
         }
 
-        .btn-close { background: #777; color: white; }
+        .btn-close { 
+            background: #777; 
+            color: white; 
+        }
     </style>
 </head>
 
 <body>
 
     <h1>Gráfico Comparativo de Perdas (2024 vs 2025)</h1>
-    </div>
 
     <!-- Gráfico geral -->
     <div class="grafico-container">
@@ -121,7 +94,7 @@
     <!-- Aqui entrarão os gráficos individuais -->
     <div id="graficos-lojas"></div>
 
-    <!-- modal de exibição dos dados da loja -->
+    <!-- Modal -->
     <div id="modal-dados" class="modal" role="dialog" aria-hidden="true">
         <div class="modal-box" role="document">
             <h3 id="modal-titulo">Dados da Loja</h3>
@@ -135,6 +108,6 @@
     </div>
 
     <script src="script.js" defer></script>
+
 </body>
 </html>
-
