@@ -28,11 +28,11 @@ function calcularKPI(dados){
 
     if(!dados.length) return;
 
-    const total = dados.reduce(
-        (a,b)=>a+(Number(b.Perdas)||0),0
-    );
+    const valores = dados.map(d=>Number(d.Perdas)||0);
 
-    const media = total/(dados.length||1);
+    const total = valores.reduce((a,b)=>a+b,0);
+
+    const media = total/(valores.length||1);
 
     document.getElementById("kpi-total")
         .innerText="R$ "+total.toFixed(2);
@@ -44,7 +44,6 @@ function calcularKPI(dados){
 
     if(media>400){
         status.innerHTML="🔴 Risco Alto";
-        status.className="alerta-critico";
     }
     else if(media>200){
         status.innerHTML="🟡 Risco Médio";
@@ -56,12 +55,37 @@ function calcularKPI(dados){
 }
 
 /* =============================
+PREVISÃO (Suavização Exponencial)
+============================= */
+
+function suavizacaoExponencial(valores, alpha=0.3){
+
+    let resultado=[valores[0]];
+
+    for(let i=1;i<valores.length;i++){
+        resultado.push(
+            alpha*valores[i] +
+            (1-alpha)*resultado[i-1]
+        );
+    }
+
+    return resultado;
+}
+
+/* =============================
 RANKING
 ============================= */
 
-function classificarRisco(valor){
-    if(valor>4000) return "risco-alto";
-    if(valor>2000) return "risco-medio";
+function classificarRiscoPercentil(valor, lista){
+
+    const sorted=[...lista].sort((a,b)=>a-b);
+
+    const p90 = sorted[Math.floor(sorted.length*0.9)];
+    const p75 = sorted[Math.floor(sorted.length*0.75)];
+
+    if(valor>=p90) return "risco-alto";
+    if(valor>=p75) return "risco-medio";
+
     return "risco-baixo";
 }
 
@@ -78,6 +102,8 @@ function renderRanking(dados){
         .map(([loja,total])=>({loja,total}))
         .sort((a,b)=>b.total-a.total);
 
+    const valores = dados.map(d=>Number(d.Perdas)||0);
+
     const container=document.getElementById("ranking");
 
     container.innerHTML="";
@@ -87,7 +113,7 @@ function renderRanking(dados){
         const div=document.createElement("div");
 
         div.className=
-        `ranking-item ${classificarRisco(item.total)}`;
+        `ranking-item ${classificarRiscoPercentil(item.total,valores)}`;
 
         div.innerHTML=`
         🥇 ${index+1} - ${item.loja}
@@ -101,7 +127,7 @@ function renderRanking(dados){
 }
 
 /* =============================
-IA ANOMALIA
+ANOMALIA
 ============================= */
 
 function detectarAnomalias(dados){
@@ -119,12 +145,15 @@ function detectarAnomalias(dados){
         /(valores.length||1)
     );
 
-    const limite = media + (2*desvio);
-
     alertas.innerHTML="";
 
     dados.forEach(item=>{
-        if(item.Perdas > limite){
+
+        const zScore =
+            desvio === 0 ? 0 :
+            (Number(item.Perdas)-media)/desvio;
+
+        if(Math.abs(zScore)>2.5){
 
             const div=document.createElement("div");
 
@@ -138,62 +167,46 @@ function detectarAnomalias(dados){
             `;
 
             alertas.appendChild(div);
-
         }
+
     });
 
 }
 
 /* =============================
-PREDIÇÃO
-============================= */
-
-function preverTendencia(valores){
-
-    let xSum=0,ySum=0,xy=0,x2=0,n=valores.length;
-
-    valores.forEach((y,x)=>{
-        xSum+=x;
-        ySum+=y;
-        xy+=x*y;
-        x2+=x*x;
-    });
-
-    const slope=
-        (n*xy-xSum*ySum)/
-        ((n*x2-xSum*xSum)||1);
-
-    const intercept=
-        (ySum-slope*xSum)/(n||1);
-
-    return valores.map((_,x)=> slope*x + intercept);
-}
-
-/* =============================
-GRÁFICO INDIVIDUAL
+GRAFICO LOJA
 ============================= */
 
 let graficoLojaAtual=null;
 
-function analisarLoja(nome, dadosLoja){
+function analisarLoja(nome,dadosLoja){
 
     const meses=[
         "Jan","Fev","Mar","Abr","Mai","Jun",
         "Jul","Ago","Set","Out","Nov","Dez"
     ];
 
+    const mapaMes = {
+        janeiro:0, fevereiro:1, março:2,
+        abril:3, maio:4, junho:5,
+        julho:6, agosto:7, setembro:8,
+        outubro:9, novembro:10, dezembro:11
+    };
+
     const valores=new Array(12).fill(0);
 
     dadosLoja.forEach(item=>{
-        const mesIndex=
-            meses.indexOf(item.Mês.substring(0,3));
+
+        const mesIndex =
+            mapaMes[item.Mês.toLowerCase()];
 
         if(mesIndex>=0){
             valores[mesIndex]+=Number(item.Perdas)||0;
         }
+
     });
 
-    const tendencia=preverTendencia(valores);
+    const tendencia = suavizacaoExponencial(valores);
 
     if(graficoLojaAtual) graficoLojaAtual.destroy();
 
@@ -211,7 +224,7 @@ function analisarLoja(nome, dadosLoja){
                         tension:.35
                     },
                     {
-                        label:"Predição",
+                        label:"Tendência",
                         data:tendencia,
                         borderDash:[5,5]
                     }
@@ -225,7 +238,7 @@ function analisarLoja(nome, dadosLoja){
 }
 
 /* =============================
-SELETOR LOJA
+SELETOR
 ============================= */
 
 function preencherSeletor(lojas){
@@ -238,10 +251,12 @@ function preencherSeletor(lojas){
     .join("");
 
     seletor.onchange=()=>{
+
         analisarLoja(
             seletor.value,
             lojas[seletor.value]
         );
+
     };
 
 }
@@ -258,8 +273,6 @@ async function iniciar(){
 
     calcularKPI(dados);
     renderRanking(dados);
-
-    /* Agrupar por loja */
 
     const lojas={};
 
