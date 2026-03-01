@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Inteligência de Perdas</title>
+<title>Elite - Inteligência de Perdas</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -10,9 +10,15 @@
 
 body{
     font-family:Arial;
+    background:linear-gradient(135deg,#f4f6fb,#dde4f5);
     margin:2rem;
-    background:#f4f6fb;
 }
+
+h1{
+    color:#0b3d91;
+}
+
+/* KPI */
 
 .kpi-container{
     display:grid;
@@ -23,35 +29,56 @@ body{
 
 .kpi{
     background:white;
-    padding:1rem;
-    border-radius:10px;
+    padding:1.2rem;
+    border-radius:12px;
     text-align:center;
     font-weight:bold;
-    box-shadow:0 3px 10px rgba(0,0,0,.08);
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
 }
 
-.alerta{
+/* Alertas */
+
+.alerta-critico{
+    animation:pulse 1.2s infinite;
     color:#c20000;
+}
+
+@keyframes pulse{
+    0%{opacity:1;}
+    50%{opacity:.5;}
+    100%{opacity:1;}
 }
 
 .grafico-container{
     background:white;
     padding:1rem;
-    border-radius:10px;
+    border-radius:12px;
     margin-bottom:2rem;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
 }
 
 .ranking-item{
     display:flex;
     justify-content:space-between;
     padding:8px;
-    border-radius:6px;
     margin:5px 0;
+    border-radius:6px;
 }
 
-.risco-alto{ background:#ffdddd;color:#a80000; }
-.risco-medio{ background:#fff3cd;color:#856404; }
-.risco-baixo{ background:#ddffdd;color:#1e7e34; }
+.risco-alto{
+    background:#ffdddd;
+    color:#a80000;
+}
+
+.risco-medio{
+    background:#fff3cd;
+    color:#856404;
+}
+
+.risco-baixo{
+    background:#ddffdd;
+    color:#1e7e34;
+}
 
 </style>
 
@@ -59,21 +86,26 @@ body{
 
 <body>
 
-<h1>🧠 Inteligência de Prevenção de Perdas</h1>
+<h1>🧠 Inteligência Elite de Prevenção de Perdas</h1>
 
 <div class="kpi-container">
 <div class="kpi">Total Perdas<br><span id="kpi-total"></span></div>
 <div class="kpi">Média Mensal<br><span id="kpi-media"></span></div>
-<div class="kpi">Status<br><span id="kpi-alerta"></span></div>
+<div class="kpi">Status<br><span id="kpi-status"></span></div>
 </div>
 
 <div class="grafico-container">
-<h2>📈 Tendência de Perdas</h2>
-<canvas id="graficoTendencia"></canvas>
+<h2>📈 Predição + Histórico</h2>
+<canvas id="graficoPredicao"></canvas>
 </div>
 
 <div class="grafico-container">
-<h2>🏆 Ranking Mensal</h2>
+<h2>⚠ Alertas Anômalos</h2>
+<div id="alertas"></div>
+</div>
+
+<div class="grafico-container">
+<h2>🏆 Ranking Estratégico</h2>
 <div id="ranking"></div>
 </div>
 

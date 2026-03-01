@@ -1,5 +1,5 @@
 async function carregarDados(){
-    const resposta = await fetch("perdas.json");
+    const resposta=await fetch("perdas.json");
     return resposta.json();
 }
 
@@ -7,75 +7,107 @@ async function carregarDados(){
 
 function calcularKPI(dados){
 
-    const total = dados.reduce((a,b)=>a+(Number(b.Perdas)||0),0);
-    const media = total / dados.length;
+    const total=dados.reduce((a,b)=>a+(Number(b.Perdas)||0),0);
+    const media=total/dados.length;
 
-    document.getElementById("kpi-total").innerText =
+    document.getElementById("kpi-total").innerText=
         "R$ "+total.toFixed(2);
 
-    document.getElementById("kpi-media").innerText =
+    document.getElementById("kpi-media").innerText=
         "R$ "+media.toFixed(2);
 
-    /* alerta simples */
+    const status=document.getElementById("kpi-status");
 
-    const alerta = document.getElementById("kpi-alerta");
-
-    if(media > 400){
-        alerta.innerHTML = "🔴 Risco Alto";
-        alerta.className="alerta";
+    if(media>400){
+        status.innerHTML="🔴 Risco Alto";
+        status.className="alerta-critico";
     }
-    else if(media > 200){
-        alerta.innerHTML = "🟡 Risco Médio";
+    else if(media>200){
+        status.innerHTML="🟡 Risco Médio";
     }
     else{
-        alerta.innerHTML = "🟢 Controlado";
+        status.innerHTML="🟢 Controlado";
     }
 }
 
 /* Ranking */
 
-function classificarRisco(valor){
-    if(valor > 4000) return "risco-alto";
-    if(valor > 2000) return "risco-medio";
-    return "risco-baixo";
-}
-
 function renderRanking(dados){
 
-    const container=document.getElementById("ranking");
-
-    const totalPorLoja={};
+    const ranking={};
 
     dados.forEach(item=>{
-        if(!totalPorLoja[item.Loja]){
-            totalPorLoja[item.Loja]=0;
+        if(!ranking[item.Loja]){
+            ranking[item.Loja]=0;
         }
-        totalPorLoja[item.Loja]+=Number(item.Perdas)||0;
+        ranking[item.Loja]+=Number(item.Perdas)||0;
     });
 
-    const ranking=Object.entries(totalPorLoja)
+    const lista=Object.entries(ranking)
         .map(([loja,total])=>({loja,total}))
         .sort((a,b)=>b.total-a.total);
 
+    const container=document.getElementById("ranking");
     container.innerHTML="";
 
-    ranking.forEach((item,index)=>{
+    lista.forEach((item,index)=>{
 
         const div=document.createElement("div");
 
         div.className=
             `ranking-item ${classificarRisco(item.total)}`;
 
-        div.innerHTML=`
-        <span>🥇 ${index+1} - ${item.loja}</span>
-        <span>R$ ${item.total.toFixed(2)}</span>
-        `;
+        div.innerHTML=
+        `🥇 ${index+1} - ${item.loja}
+         <span>R$ ${item.total.toFixed(2)}</span>`;
 
         container.appendChild(div);
+
     });
 }
 
-/* Previsão simples (Regressão Linear) */
+function classificarRisco(valor){
+    if(valor>4000) return "risco-alto";
+    if(valor>2000) return "risco-medio";
+    return "risco-baixo";
+}
+
+/* Detecção de Anomalias (IA Simples Estatística) */
+
+function detectarAnomalias(dados){
+
+    const valores=dados.map(d=>Number(d.Perdas)||0);
+
+    const media=valores.reduce((a,b)=>a+b)/valores.length;
+
+    const desvio=Math.sqrt(
+        valores.reduce((a,b)=>a+Math.pow(b-media,2),0)
+        /valores.length
+    );
+
+    const limiteSuperior=media + (2*desvio);
+
+    const alertas=document.getElementById("alertas");
+    alertas.innerHTML="";
+
+    dados.forEach(item=>{
+        if(item.Perdas > limiteSuperior){
+
+            const div=document.createElement("div");
+
+            div.className="alerta-critico";
+
+            div.innerHTML=
+            `🚨 Anomalia detectada:
+            ${item.Loja} | ${item.Mês}
+            R$ ${item.Perdas}`;
+
+            alertas.appendChild(div);
+        }
+    });
+}
+
+/* Predição (Regressão Linear) */
 
 function preverTendencia(valores){
 
@@ -88,19 +120,15 @@ function preverTendencia(valores){
         x2+=x*x;
     });
 
-    const slope =
-        (n*xy - xSum*ySum) /
-        (n*x2 - xSum*xSum);
-
-    const intercept =
-        (ySum - slope*xSum)/n;
+    const slope=(n*xy-xSum*ySum)/(n*x2-xSum*xSum);
+    const intercept=(ySum-slope*xSum)/n;
 
     return valores.map((_,x)=> slope*x + intercept);
 }
 
 /* Gráfico */
 
-function criarGraficoTendencia(dados){
+function criarGrafico(dados){
 
     const meses=[
         "Jan","Fev","Mar","Abr","Mai","Jun",
@@ -110,7 +138,7 @@ function criarGraficoTendencia(dados){
     const valores=new Array(12).fill(0);
 
     dados.forEach(item=>{
-        const mesIndex=parseInt(item.MêsNumero||0);
+        const mesIndex=meses.indexOf(item.Mês.substring(0,3));
         if(mesIndex>=0){
             valores[mesIndex]+=Number(item.Perdas)||0;
         }
@@ -119,23 +147,23 @@ function criarGraficoTendencia(dados){
     const tendencia=preverTendencia(valores);
 
     new Chart(
-        document.getElementById("graficoTendencia"),
+        document.getElementById("graficoPredicao"),
         {
             type:"line",
             data:{
                 labels:meses,
                 datasets:[
                     {
-                        label:"Perdas",
+                        label:"Histórico",
                         data:valores,
                         borderWidth:2,
                         tension:.3
                     },
                     {
-                        label:"Tendência",
+                        label:"Predição",
                         data:tendencia,
-                        borderWidth:2,
-                        borderDash:[5,5]
+                        borderDash:[5,5],
+                        borderWidth:2
                     }
                 ]
             }
@@ -143,7 +171,7 @@ function criarGraficoTendencia(dados){
     );
 }
 
-/* Inicialização */
+/* Inicializar */
 
 async function iniciar(){
 
@@ -151,7 +179,8 @@ async function iniciar(){
 
     calcularKPI(dados);
     renderRanking(dados);
-    criarGraficoTendencia(dados);
+    detectarAnomalias(dados);
+    criarGrafico(dados);
 
 }
 
