@@ -1,6 +1,6 @@
 
 /* =============================
-IA UTILS
+IA AVANÇADA
 ============================= */
 
 function regressaoLinear(valores){
@@ -21,7 +21,12 @@ function regressaoLinear(valores){
     const intercept=
     (ySum-slope*xSum)/(n||1);
 
-    return valores.map((_,x)=>slope*x+intercept);
+    return {
+        slope,
+        intercept,
+        predict:(x)=>slope*x+intercept
+    };
+
 }
 
 /* =============================
@@ -46,7 +51,7 @@ async function carregarDados(){
 }
 
 /* =============================
-KPI ENTERPRISE
+KPI INTELIGENTE
 ============================= */
 
 function calcularKPI(dados){
@@ -61,7 +66,7 @@ function calcularKPI(dados){
         /(valores.length||1)
     );
 
-    const score=Math.abs(desvio/(media||1))*100;
+    const score=(desvio/(media||1))*100;
 
     document.getElementById("kpi-total")
     .innerText="R$ "+total.toFixed(2);
@@ -72,10 +77,18 @@ function calcularKPI(dados){
     document.getElementById("kpi-score")
     .innerText=score.toFixed(2)+"%";
 
+    /* Previsão global */
+    const modelo=regressaoLinear(valores);
+
+    const previsao=modelo.predict(valores.length);
+
+    document.getElementById("kpi-previsao")
+    .innerText="R$ "+Math.max(previsao,0).toFixed(2);
+
 }
 
 /* =============================
-RANKING
+RANKING INTELIGENTE
 ============================= */
 
 function renderRanking(dados){
@@ -101,10 +114,9 @@ function renderRanking(dados){
 
         div.className="ranking-item";
 
-        div.innerHTML=`
-        🥇 ${i+1} | ${item.loja}
-        <span>R$ ${item.total.toFixed(2)}</span>
-        `;
+        div.innerHTML=
+        `🥇 ${i+1} | ${item.loja}
+        <span>R$ ${item.total.toFixed(2)}</span>`;
 
         container.appendChild(div);
 
@@ -113,7 +125,7 @@ function renderRanking(dados){
 }
 
 /* =============================
-ANOMALIA
+ANOMALIA IA
 ============================= */
 
 function detectarAnomalias(dados){
@@ -122,8 +134,7 @@ function detectarAnomalias(dados){
 
     const valores=dados.map(d=>Number(d.Perdas)||0);
 
-    const media=
-    valores.reduce((a,b)=>a+b,0)/(valores.length||1);
+    const media=valores.reduce((a,b)=>a+b,0)/(valores.length||1);
 
     const desvio=Math.sqrt(
         valores.reduce((a,b)=>a+Math.pow(b-media,2),0)
@@ -132,25 +143,26 @@ function detectarAnomalias(dados){
 
     alertas.innerHTML="";
 
-    dados.forEach(item=>{
+    dados.forEach(d=>{
 
         const z=
         desvio===0?0:
-        (item.Perdas-media)/desvio;
+        (d.Perdas-media)/desvio;
 
-        if(Math.abs(z)>2.5){
+        if(Math.abs(z)>2.2){
 
             const div=document.createElement("div");
 
             div.className="alerta";
 
             div.innerHTML=`
-            🚨 Anomalia detectada:
-            ${item.Loja} | ${item.Mês}
-            R$ ${Number(item.Perdas).toFixed(2)}
+            🚨 Risco Detectado:
+            ${d.Loja} | ${d.Mês}
+            R$ ${Number(d.Perdas).toFixed(2)}
             `;
 
             alertas.appendChild(div);
+
         }
 
     });
@@ -184,7 +196,9 @@ function analisarLoja(nome,dadosLoja){
         if(m>=0) valores[m]+=Number(d.Perdas)||0;
     });
 
-    const tendencia=regressaoLinear(valores);
+    const modelo=regressaoLinear(valores);
+
+    const tendencia=valores.map((_,i)=>modelo.predict(i));
 
     if(chartLoja) chartLoja.destroy();
 
@@ -197,13 +211,12 @@ function analisarLoja(nome,dadosLoja){
                 datasets:[
                     {
                         label:"Histórico",
-                        data:valores,
-                        borderWidth:2
+                        data:valores
                     },
                     {
                         label:"Previsão IA",
                         data:tendencia,
-                        borderDash:[6,6]
+                        borderDash:[5,5]
                     }
                 ]
             }
