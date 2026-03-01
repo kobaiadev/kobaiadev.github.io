@@ -1,110 +1,124 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Painel de Monitoramento de Perdas</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta charset="UTF-8">
+<title>Dashboard Perdas - Prevenção</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa, #e4e8f0);
-            margin: 2rem;
-            color: #222;
-        }
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        h1 {
-            color: #0b3d91;
-            font-weight: 600;
-        }
+<style>
 
-        .grafico-container {
-            background: white;
-            padding: 1rem;
-            border-radius: 10px;
-            border: 1px solid #ddd;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
+body{
+    font-family: Arial;
+    margin: 2rem;
+    background: linear-gradient(135deg,#f5f7fa,#e4e8f0);
+}
 
-        canvas {
-            width: 100% !important;
-        }
+h1{
+    color:#0b3d91;
+}
 
-        .modal {
-            position: fixed;
-            inset: 0;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0,0,0,0.4);
-            z-index: 9999;
-        }
+.grafico-container{
+    background:white;
+    padding:1rem;
+    border-radius:10px;
+    margin-bottom:2rem;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
 
-        .modal.open { display: flex; }
+canvas{
+    width:100%!important;
+}
 
-        .modal-box {
-            background: white;
-            width: 90%;
-            max-width: 800px;
-            max-height: 80%;
-            overflow: auto;
-            padding: 1rem;
-            border-radius: 10px;
-            box-shadow: 0 6px 30px rgba(0,0,0,0.2);
-        }
+.ranking-item{
+    display:flex;
+    justify-content:space-between;
+    padding:10px;
+    margin:6px 0;
+    border-radius:6px;
+    font-weight:bold;
+}
 
-        .modal-box pre {
-            white-space: pre-wrap;
-            word-break: break-word;
-            background: #f7f7f7;
-            padding: .5rem;
-            border-radius: 6px;
-            border: 1px solid #eee;
-        }
+.risco-alto{
+    background:#ffdddd;
+    color:#a80000;
+}
 
-        .modal-actions {
-            margin-top: .5rem;
-            text-align: right;
-        }
+.risco-medio{
+    background:#fff3cd;
+    color:#856404;
+}
 
-        .modal-actions button {
-            padding: .4rem .8rem;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
+.risco-baixo{
+    background:#ddffdd;
+    color:#1e7e34;
+}
 
-        .btn-close { 
-            background: #777; 
-            color: white; 
-        }
-    </style>
+/* Modal */
+
+.modal{
+    position:fixed;
+    inset:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    background:rgba(0,0,0,.4);
+    z-index:9999;
+}
+
+.modal.open{
+    display:flex;
+}
+
+.modal-box{
+    background:white;
+    width:90%;
+    max-width:800px;
+    padding:1rem;
+    border-radius:10px;
+}
+
+.btn-close{
+    padding:.5rem 1rem;
+    border:none;
+    background:#777;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+</style>
 </head>
 
 <body>
 
-    <h1>Painel de Monitoramento de Perdas</h1>
+<h1>📊 Dashboard Prevenção de Perdas</h1>
 
-    <div class="grafico-container">
-        <h2>Geral: Todas as Lojas</h2>
-        <canvas id="graficoGeral"></canvas>
-    </div>
+<div class="grafico-container">
+<h2>Geral - Todas as Lojas</h2>
+<canvas id="graficoGeral"></canvas>
+</div>
 
-    <div id="graficos-lojas"></div>
+<div class="grafico-container">
+<h2>🏆 Ranking de Lojas</h2>
+<div id="ranking"></div>
+</div>
 
-    <!-- Modal -->
-    <div id="modal-dados" class="modal">
-        <div class="modal-box">
-            <h3 id="modal-titulo"></h3>
-            <pre id="modal-json"></pre>
-            <div class="modal-actions">
-                <button class="btn-close" id="btn-fechar">Fechar</button>
-            </div>
-        </div>
-    </div>
+<div id="graficos-lojas"></div>
 
-    <script src="script.js" defer></script>
+<!-- Modal -->
+
+<div id="modal-dados" class="modal">
+<div class="modal-box">
+<h3 id="modal-titulo"></h3>
+<pre id="modal-json"></pre>
+<div style="text-align:right;margin-top:10px">
+<button id="btn-fechar" class="btn-close">Fechar</button>
+</div>
+</div>
+</div>
+
+<script src="script.js"></script>
 
 </body>
 </html>

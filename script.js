@@ -1,128 +1,176 @@
-async function carregarDados() {
+async function carregarDados(){
     const resposta = await fetch("perdas.json");
     return resposta.json();
 }
 
-function agruparPorLoja(dados) {
+function agruparPorLoja(dados){
+
     const lojas = {};
-    dados.forEach(item => {
-        if (!lojas[item.Loja]) {
-            lojas[item.Loja] = [];
+
+    dados.forEach(item=>{
+        if(!lojas[item.Loja]){
+            lojas[item.Loja]=[];
         }
         lojas[item.Loja].push(item);
     });
+
     return lojas;
 }
 
-function abrirModal(loja, mes, datasets) {
-    const modal = document.getElementById("modal-dados");
-    const titulo = document.getElementById("modal-titulo");
-    const json = document.getElementById("modal-json");
-
-    titulo.textContent = `${loja} - ${mes}`;
-    json.textContent = JSON.stringify(datasets, null, 2);
-
-    modal.classList.add("open");
+function classificarRisco(valor){
+    if(valor > 4000) return "risco-alto";
+    if(valor > 2000) return "risco-medio";
+    return "risco-baixo";
 }
 
-document.getElementById("btn-fechar").addEventListener("click", () => {
+function calcularRanking(dados){
+
+    const totalPorLoja = {};
+
+    dados.forEach(item=>{
+        if(!totalPorLoja[item.Loja]){
+            totalPorLoja[item.Loja]=0;
+        }
+        totalPorLoja[item.Loja]+=Number(item.Perdas)||0;
+    });
+
+    const ranking = Object.keys(totalPorLoja).map(loja=>({
+        loja,
+        total: totalPorLoja[loja]
+    }));
+
+    return ranking.sort((a,b)=>b.total-a.total);
+}
+
+function renderRanking(ranking){
+
+    const container = document.getElementById("ranking");
+    container.innerHTML="";
+
+    ranking.forEach((item,index)=>{
+
+        const div=document.createElement("div");
+
+        div.className=`ranking-item ${classificarRisco(item.total)}`;
+
+        div.innerHTML=`
+            <span>🥇 ${index+1} - ${item.loja}</span>
+            <span>R$ ${item.total.toFixed(2)}</span>
+        `;
+
+        container.appendChild(div);
+    });
+}
+
+function abrirModal(titulo, dados){
+
+    document.getElementById("modal-titulo").textContent=titulo;
+    document.getElementById("modal-json").textContent=
+        JSON.stringify(dados,null,2);
+
+    document.getElementById("modal-dados").classList.add("open");
+}
+
+document.getElementById("btn-fechar").onclick=()=>{
     document.getElementById("modal-dados").classList.remove("open");
-});
+}
 
-function criarGrafico(idCanvas, titulo, labels, datasets) {
+function criarGrafico(idCanvas,titulo,labels,datasets){
 
-    const canvas = document.getElementById(idCanvas);
+    const canvas=document.getElementById(idCanvas);
 
-    // Destruir gráfico anterior se existir
-    const chartExistente = Chart.getChart(canvas);
-    if (chartExistente) {
-        chartExistente.destroy();
-    }
+    const antigo=Chart.getChart(canvas);
+    if(antigo) antigo.destroy();
 
-    new Chart(canvas, {
-        type: "line",
-        data: {
-            labels,
-            datasets
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: { display: true, text: titulo }
+    new Chart(canvas,{
+        type:"line",
+        data:{ labels,datasets },
+        options:{
+            responsive:true,
+            plugins:{
+                title:{display:true,text:titulo}
             },
-            onClick: (evt, elements) => {
-                if (elements.length > 0) {
-                    const index = elements[0].index;
-                    abrirModal(titulo, labels[index], datasets);
+            onClick:(evt,elements)=>{
+                if(elements.length){
+                    const index=elements[0].index;
+                    abrirModal(titulo,{
+                        mes:labels[index],
+                        dados:datasets
+                    });
                 }
             }
         }
     });
 }
 
-function prepararSeries(dadosLoja) {
+function prepararSeries(dadosLoja){
 
-    const mesesOrd = [
+    const mesesOrd=[
         "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
         "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
     ];
 
-    const anos = [...new Set(dadosLoja.map(d => d.Ano))].sort((a,b)=>a-b);
+    const anos=[...new Set(dadosLoja.map(d=>d.Ano))].sort((a,b)=>a-b);
 
-    const datasets = anos.map(ano => {
+    const datasets=anos.map(ano=>{
 
-        const valores = new Array(12).fill(null);
+        const valores=new Array(12).fill(0);
 
-        dadosLoja.forEach(item => {
-            const idx = mesesOrd.indexOf(item["Mês"]);
-            if (idx >= 0 && item.Ano === ano) {
-                valores[idx] = Number(item.Perdas) || 0;
-            }
+        mesesOrd.forEach((mes,index)=>{
+
+            const reg=dadosLoja.find(
+                i=>i.Ano===ano && i["Mês"]===mes
+            );
+
+            valores[index]=reg?Number(reg.Perdas):0;
         });
 
-        return {
-            label: ano,
-            data: valores,
-            borderWidth: 2,
-            tension: 0.3,
-            fill: false
+        return{
+            label:ano,
+            data:valores,
+            borderWidth:2,
+            tension:.35,
+            fill:false
         };
     });
 
-    return { mesesOrd, datasets };
+    return {mesesOrd,datasets};
 }
 
-async function montarGraficos() {
+async function montarGraficos(){
 
-    const dados = await carregarDados();
-    const lojas = agruparPorLoja(dados);
+    const dados=await carregarDados();
 
-    const mesesOrd = [
+    const lojas=agruparPorLoja(dados);
+
+    /* GRAFICO GERAL */
+
+    const mesesOrd=[
         "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
         "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
     ];
 
-    const anosGlobais = [...new Set(dados.map(d => d.Ano))].sort((a,b)=>a-b);
+    const anosGlobais=[...new Set(dados.map(d=>d.Ano))].sort();
 
-    const datasetsGerais = anosGlobais.map(ano => {
+    const datasetsGerais=anosGlobais.map(ano=>{
 
-        const valores = new Array(12).fill(0);
+        const valores=new Array(12).fill(0);
 
-        dados.forEach(item => {
-            if (item.Ano === ano) {
-                const idx = mesesOrd.indexOf(item["Mês"]);
-                if (idx >= 0) {
-                    valores[idx] += Number(item.Perdas) || 0;
+        dados.forEach(item=>{
+            if(item.Ano===ano){
+                const idx=mesesOrd.indexOf(item["Mês"]);
+                if(idx>=0){
+                    valores[idx]+=Number(item.Perdas)||0;
                 }
             }
         });
 
-        return {
-            label: ano,
-            data: valores,
-            borderWidth: 2,
-            tension: 0.3,
-            fill: false
+        return{
+            label:ano,
+            data:valores,
+            borderWidth:2,
+            tension:.35,
+            fill:false
         };
     });
 
@@ -133,27 +181,36 @@ async function montarGraficos() {
         datasetsGerais
     );
 
-    const container = document.getElementById("graficos-lojas");
-    container.innerHTML = "";
+    /* RANKING */
 
-    Object.keys(lojas).forEach(lojaNome => {
+    const ranking=calcularRanking(dados);
+    renderRanking(ranking);
 
-        const lojaDados = lojas[lojaNome];
-        const { mesesOrd, datasets } = prepararSeries(lojaDados);
+    /* GRAFICOS POR LOJA */
 
-        const div = document.createElement("div");
-        div.className = "grafico-container";
+    const container=document.getElementById("graficos-lojas");
+    container.innerHTML="";
 
-        const idCanvas = `grafico-${lojaNome.replace(/[^a-zA-Z0-9]/g, "")}`;
+    Object.keys(lojas).forEach(lojaNome=>{
 
-        div.innerHTML = `
+        const lojaDados=lojas[lojaNome];
+
+        const {mesesOrd,datasets}=prepararSeries(lojaDados);
+
+        const div=document.createElement("div");
+        div.className="grafico-container";
+
+        const idCanvas="grafico-"+lojaNome.replace(/[^a-zA-Z0-9]/g,"");
+
+        div.innerHTML=`
             <h2>${lojaNome}</h2>
             <canvas id="${idCanvas}"></canvas>
         `;
 
         container.appendChild(div);
 
-        criarGrafico(idCanvas, lojaNome, mesesOrd, datasets);
+        criarGrafico(idCanvas,lojaNome,mesesOrd,datasets);
+
     });
 }
 
