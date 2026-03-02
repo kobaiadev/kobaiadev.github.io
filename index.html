@@ -2,23 +2,41 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Dashboard - Perdas por Loja</title>
+<title>Dashboard Perdas</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <link rel="stylesheet" href="style.css">
 
 </head>
 
 <body>
 
-<h1>📊 Dashboard de Perdas - Evolução Mensal e Anual</h1>
+<h1>📊 Dashboard de Perdas</h1>
 
-<div class="card">
-    <canvas id="graficoGeral"></canvas>
+<div class="kpi-container">
+
+<div class="kpi-card">
+<h3>Total Perdas 2024</h3>
+<div id="kpi2024"></div>
 </div>
 
-<h2>📌 Evolução por Loja</h2>
+<div class="kpi-card">
+<h3>Total Perdas 2025</h3>
+<div id="kpi2025"></div>
+</div>
+
+<div class="kpi-card">
+<h3>Total Perdas 2026</h3>
+<div id="kpi2026"></div>
+</div>
+
+</div>
+
+<div class="card">
+<canvas id="graficoGeral"></canvas>
+</div>
+
+<h2>📌 Perdas por Loja</h2>
 
 <div id="graficos-lojas"></div>
 
