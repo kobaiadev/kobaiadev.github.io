@@ -23,35 +23,54 @@ function agruparPorLoja(dados){
 
 function prepararSeries(dadosLoja){
 
-    const valores = {
-        2024:new Array(12).fill(0),
-        2025:new Array(12).fill(0),
-        2026:new Array(12).fill(0)
-    };
+    const anos = [2024,2025,2026];
+
+    const series = {};
+
+    anos.forEach(ano=>{
+        series[ano] = new Array(12).fill(null);
+    });
 
     dadosLoja.forEach(item=>{
         const idx = mesesOrd.indexOf(item.Mês);
 
-        if(idx>=0){
-            if(valores[item.Ano]){
-                valores[item.Ano][idx] = item.Perdas;
-            }
+        if(idx >= 0 && series[item.Ano]){
+            series[item.Ano][idx] = item.Perdas;
         }
     });
 
-    return valores;
+    return series;
 }
 
 function criarGrafico(id,titulo,labels,d2024,d2025,d2026){
 
-    new Chart(document.getElementById(id),{
+    const ctx = document.getElementById(id);
+
+    if(!ctx) return;
+
+    new Chart(ctx,{
         type:"line",
         data:{
-            labels,
+            labels:labels,
             datasets:[
-                {label:"2024",data:d2024,borderWidth:2,tension:0.3},
-                {label:"2025",data:d2025,borderWidth:2,tension:0.3},
-                {label:"2026",data:d2026,borderWidth:2,tension:0.3}
+                {
+                    label:"2024",
+                    data:d2024,
+                    borderWidth:2,
+                    tension:0.3
+                },
+                {
+                    label:"2025",
+                    data:d2025,
+                    borderWidth:2,
+                    tension:0.3
+                },
+                {
+                    label:"2026",
+                    data:d2026,
+                    borderWidth:2,
+                    tension:0.3
+                }
             ]
         },
         options:{
@@ -78,7 +97,6 @@ function calcularKPI(dados){
         if(item.Ano === 2026) total2026 += item.Perdas;
     });
 
-    // 🔥 CORREÇÃO DO ERRO NULL
     const el2024 = document.getElementById("kpi2024");
     const el2025 = document.getElementById("kpi2025");
     const el2026 = document.getElementById("kpi2026");
@@ -96,7 +114,8 @@ async function iniciar(){
 
     const lojas = agruparPorLoja(dados);
 
-    /* GRAFICO GERAL */
+    /* ===== GRAFICO GERAL ===== */
+
     const total2024 = new Array(12).fill(0);
     const total2025 = new Array(12).fill(0);
     const total2026 = new Array(12).fill(0);
@@ -104,52 +123,55 @@ async function iniciar(){
     dados.forEach(item=>{
         const idx = mesesOrd.indexOf(item.Mês);
 
-        if(idx>=0){
-            if(item.Ano===2024) total2024[idx]+=item.Perdas;
-            if(item.Ano===2025) total2025[idx]+=item.Perdas;
-            if(item.Ano===2026) total2026[idx]+=item.Perdas;
+        if(idx >= 0){
+            if(item.Ano === 2024) total2024[idx]+=item.Perdas;
+            if(item.Ano === 2025) total2025[idx]+=item.Perdas;
+            if(item.Ano === 2026) total2026[idx]+=item.Perdas;
         }
     });
 
     criarGrafico(
         "graficoGeral",
-        "Comparativo Geral",
+        "Comparativo Geral de Perdas",
         Array.from({length:12},(_,i)=>i+1),
         total2024,
         total2025,
         total2026
     );
 
-    /* GRAFICOS POR LOJA */
+    /* ===== GRAFICOS POR LOJA ===== */
 
     const container = document.getElementById("graficos-lojas");
-    container.innerHTML="";
 
-    Object.keys(lojas).forEach(lojaNome=>{
+    if(container){
+        container.innerHTML = "";
 
-        const serie = prepararSeries(lojas[lojaNome]);
+        Object.keys(lojas).forEach(lojaNome=>{
 
-        const div = document.createElement("div");
-        div.className = "grafico-container";
+            const serie = prepararSeries(lojas[lojaNome]);
 
-        const idCanvas = "grafico-"+lojaNome.replace(/\s/g,"");
+            const div = document.createElement("div");
+            div.className = "grafico-container";
 
-        div.innerHTML = `
-            <h3>${lojaNome}</h3>
-            <canvas id="${idCanvas}"></canvas>
-        `;
+            const idCanvas = "grafico-" + lojaNome.replace(/\s/g,"");
 
-        container.appendChild(div);
+            div.innerHTML = `
+                <h3>${lojaNome}</h3>
+                <canvas id="${idCanvas}"></canvas>
+            `;
 
-        criarGrafico(
-            idCanvas,
-            lojaNome,
-            mesesOrd,
-            serie[2024],
-            serie[2025],
-            serie[2026]
-        );
-    });
+            container.appendChild(div);
+
+            criarGrafico(
+                idCanvas,
+                lojaNome,
+                mesesOrd,
+                serie[2024],
+                serie[2025],
+                serie[2026]
+            );
+        });
+    }
 }
 
 /* GARANTE QUE O DOM CARREGOU */
